@@ -37,8 +37,8 @@ An authentic, student-first Ayurvedic question practice and examination platform
 
 ### 1. Install & Unpack
 ```bash
-git clone https://github.com/rahulwedsradhika/ayurvedsidhi.git
-cd ayurvedsidhi
+git clone https://github.com/rahulwedsradhika/test.git
+cd test
 npm install
 ```
 *(The `postinstall` script automatically verifies and prepares all local SQLite databases).*
