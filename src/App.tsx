@@ -19,13 +19,18 @@ import { TagwiseHomePage } from './pages/TagwiseHomePage';
 import { TagwiseQuestionListPage } from './pages/TagwiseQuestionListPage';
 import { TagwiseExamScreen } from './pages/TagwiseExamScreen';
 import { TagwiseResultScreen } from './pages/TagwiseResultScreen';
+import { PreviousYearsHomePage } from './pages/PreviousYearsHomePage';
+import { PreviousYearsTestListPage } from './pages/PreviousYearsTestListPage';
+import { PreviousYearsExamScreen } from './pages/PreviousYearsExamScreen';
+import { PreviousYearsResultScreen } from './pages/PreviousYearsResultScreen';
 
 export default function App() {
   const location = useLocation();
   const isExamMode =
     location.pathname.startsWith('/practice/') ||
     location.pathname.startsWith('/test-series/exam/') ||
-    location.pathname.startsWith('/tagwise/practice/');
+    location.pathname.startsWith('/tagwise/practice/') ||
+    (location.pathname.startsWith('/previous-years/tests/') && location.pathname.endsWith('/exam'));
 
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col font-sans text-stone-900 selection:bg-amber-200">
@@ -58,6 +63,12 @@ export default function App() {
           <Route path="/tagwise/:tagId" element={<TagwiseQuestionListPage />} />
           <Route path="/tagwise/practice/:attemptId" element={<TagwiseExamScreen />} />
           <Route path="/tagwise/results/:attemptId" element={<TagwiseResultScreen />} />
+
+          {/* Phase 6: Previous Year Papers Routes */}
+          <Route path="/previous-years" element={<PreviousYearsHomePage />} />
+          <Route path="/previous-years/:groupId" element={<PreviousYearsTestListPage />} />
+          <Route path="/previous-years/tests/:testId/exam" element={<PreviousYearsExamScreen />} />
+          <Route path="/previous-years/attempts/:attemptId/results" element={<PreviousYearsResultScreen />} />
         </Routes>
       </main>
 
@@ -69,17 +80,17 @@ export default function App() {
               <span className="w-6 h-6 rounded-lg bg-[#1A5344] text-white flex items-center justify-center text-xs">
                 🌿
               </span>
-              <span>AyurvedSiddhi Classical, Subjectwise, Test Series & Tagwise Portal</span>
+              <span>AyurvedSiddhi Classical, Subjectwise, Test Series, Tagwise & PYP Portal</span>
             </div>
             <div className="flex items-center gap-6 text-stone-500">
               <span>Port: 5167</span>
               <span>•</span>
-              <span>17 Samhitas • 38 Subjects • 7 Test Series • 6 Tagwise Categories</span>
+              <span>17 Samhitas • 38 Subjects • 7 Test Series • 6 Tags • 127 PYP Papers</span>
               <span>•</span>
-              <span>151,830+ Authenticated Live Questions</span>
+              <span>175,542+ Authenticated Live Questions</span>
             </div>
             <div className="text-stone-400">
-              Charaka • Sushruta • Vagbhata • AIAPGET • UPSC • UPPSC • HPSC • New Pattern Tags
+              Charaka • Sushruta • Vagbhata • AIAPGET • UPSC • State PSCs • New Pattern Tags
             </div>
           </div>
         </footer>

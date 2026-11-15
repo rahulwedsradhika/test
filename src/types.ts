@@ -319,3 +319,92 @@ export interface TagwiseReviewQuestion {
   is_correct: boolean;
   is_marked_for_review: boolean;
 }
+
+// Phase 6: Previous Year Papers Types
+export interface PreviousYearGroup {
+  local_group_id: string;
+  display_order: number;
+  screenshot_label_exact: string;
+  screenshot_description_exact: string;
+  user_description_alias: string;
+  expected_test_count: number;
+  native_group_id: string;
+  source_entitlement_state: string;
+  ingestion_status: string;
+  catalogued_test_memberships: number;
+  ready_test_memberships: number;
+}
+
+export interface PreviousYearTest {
+  test_uid: string;
+  source_native_test_id: string;
+  title_source_exact: string;
+  exam_year_source: string | null;
+  exam_type_source: string | null;
+  scheduled_date_source: string;
+  duration_seconds_source: number;
+  max_marks_source: number;
+  negative_marking_source: string;
+  expected_question_count_source: number;
+  availability_source: string;
+  access_state: string;
+  validation_state: string;
+  source_position: number;
+  actual_question_count: number;
+  instructions_source_raw?: string;
+  memberships?: {
+    local_group_id: string;
+    screenshot_label_exact: string;
+    source_position: number;
+  }[];
+}
+
+export interface PYPExamQuestion {
+  position: number;
+  question_uid: string;
+  stem: string;
+  question_type: string;
+  structure: Record<string, any>;
+  correct_key?: string;
+  explanation?: string;
+  options: {
+    position: number;
+    key: string;
+    text: string;
+    is_correct?: boolean;
+  }[];
+}
+
+export interface PYPScorecard {
+  attempt_id: string;
+  test_uid: string;
+  test_title: string;
+  exam_year: string | null;
+  score: number;
+  max_marks: number;
+  accuracy_percent: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  time_spent_seconds: number;
+  started_at: string;
+  completed_at: string;
+}
+
+export interface PYPReviewQuestion {
+  position: number;
+  question_uid: string;
+  stem: string;
+  structure: Record<string, any>;
+  options: {
+    position: number;
+    key: string;
+    text: string;
+    is_correct: boolean;
+  }[];
+  user_choice: string | null;
+  correct_key: string;
+  is_correct: boolean;
+  is_attempted: boolean;
+  explanation: string;
+}

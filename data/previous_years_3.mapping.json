@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0.0",
+  "project": "AyurvedSiddhi Previous Year Papers — Phase 6",
+  "scope": "Metadata mapping only; zero fetched tests/questions",
+  "evidence_image": "evidence/previous_years_home_screenshot.png",
+  "parent": {
+    "id": "PYP-ROOT",
+    "source_display_title_exact": "PREVIOUS YEAR PAPERS",
+    "entrypoint_path_user_supplied": "/prev-years.php",
+    "entrypoint_host": null,
+    "entrypoint_http_method": null,
+    "entrypoint_verified_with_api": false
+  },
+  "expected_group_count": 3,
+  "expected_test_listings_sum": 250,
+  "distinct_test_count": null,
+  "interpretation": "The sum 127+67+56 is 250 group/test memberships, not necessarily 250 distinct tests: the 'All' group may include tests from the two other groups. Native IDs and overlap must be verified from authorized source responses.",
+  "groups": [
+    {
+      "local_group_id": "PYP-ALL",
+      "display_order": 1,
+      "screenshot_label_exact": "ALL AYURVEDA ENTRANCE TESTS",
+      "user_description_alias": "All India Ayurveda Entrance Test",
+      "screenshot_description_exact": "Practice previous year exams of Post Graduate Entrance Tests and State/Central UPSC",
+      "expected_test_count": 127,
+      "count_origin": "user_supplied_not_visible_in_screenshot",
+      "endpoint_hint_user_supplied": "/prev-years.php?action=exams",
+      "source_native_group_id": null,
+      "upstream_endpoint_verified": false,
+      "children": "direct_test_list",
+      "is_potential_aggregate_group": true,
+      "exam_years": null,
+      "is_paid": null,
+      "extraction_status": "mapping_only"
+    },
+    {
+      "local_group_id": "PYP-PG",
+      "display_order": 2,
+      "screenshot_label_exact": "POST GRADUATE ENTRANCE TESTS",
+      "user_description_alias": "Post Graduate Entrance Tests",
+      "screenshot_description_exact": "Practice previous year exams of different states and colleges!!",
+      "expected_test_count": 67,
+      "count_origin": "user_supplied_not_visible_in_screenshot",
+      "endpoint_hint_user_supplied": "/prev-years.php?action=exams&type=aiapget",
+      "source_native_group_id": null,
+      "upstream_endpoint_verified": false,
+      "children": "direct_test_list",
+      "is_potential_aggregate_group": false,
+      "exam_years": null,
+      "is_paid": null,
+      "extraction_status": "mapping_only"
+    },
+    {
+      "local_group_id": "PYP-UPSC",
+      "display_order": 3,
+      "screenshot_label_exact": "UPSC AYURVEDA ENTRANCE TESTS",
+      "user_description_alias": "UPSC Ayurveda Entrance Tests",
+      "screenshot_description_exact": "Practice previous year exams of State and Central UPSC !!",
+      "expected_test_count": 56,
+      "count_origin": "user_supplied_not_visible_in_screenshot",
+      "endpoint_hint_user_supplied": "/prev-years.php?action=exams&type=upsc",
+      "source_native_group_id": null,
+      "upstream_endpoint_verified": false,
+      "children": "direct_test_list",
+      "is_potential_aggregate_group": false,
+      "exam_years": null,
+      "is_paid": null,
+      "extraction_status": "mapping_only"
+    }
+  ],
+  "guardrails": {
+    "new_database_only": "data/previous_years_fresh.sqlite",
+    "old_question_data_reuse": "forbidden",
+    "ui_counts_are_targets_not_fetched_record_counts": true,
+    "source_api_access": "authorized_only",
+    "prior_phases": "leave_unchanged",
+    "git_workflow": "separate_feature_or_preview_branch; no production publishing"
+  }
+}

@@ -149,24 +149,28 @@ export const HomePage: React.FC = () => {
           </p>
 
           {/* Quick Stats Pill Deck */}
-          <div className="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 border-t border-white/15">
+          <div className="pt-4 grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 border-t border-white/15">
             <div>
               <div className="text-xl sm:text-2xl font-bold font-outfit text-white">57,452</div>
-              <div className="text-xs text-white/70">Samhitawise Validated</div>
+              <div className="text-xs text-white/70">17 Samhitas</div>
             </div>
             <div>
               <div className="text-xl sm:text-2xl font-bold font-outfit text-[#34D399]">
                 {totalSubjectValidated ? totalSubjectValidated.toLocaleString() : '57,476'}
               </div>
-              <div className="text-xs text-white/70">Subjectwise Validated</div>
+              <div className="text-xs text-white/70">38 Subjects</div>
             </div>
             <div>
               <div className="text-xl sm:text-2xl font-bold font-outfit text-amber-300">362 Tests</div>
-              <div className="text-xs text-white/70">7 National Series (36,902 Qs)</div>
+              <div className="text-xs text-white/70">7 Series (36,902 Qs)</div>
             </div>
             <div>
-              <div className="text-xl sm:text-2xl font-bold font-outfit text-white">151,830 Live</div>
-              <div className="text-xs text-white/70">Total Authenticated Qs</div>
+              <div className="text-xl sm:text-2xl font-bold font-outfit text-teal-300">9,632 Qs</div>
+              <div className="text-xs text-white/70">6 Format Tags</div>
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-bold font-outfit text-sky-300">127 Papers</div>
+              <div className="text-xs text-white/70">PYP (14,080 Qs)</div>
             </div>
           </div>
         </div>
@@ -217,6 +221,16 @@ export const HomePage: React.FC = () => {
             <span>Tagwise Bank</span>
             <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-200/70 text-emerald-900">
               6 Tags
+            </span>
+          </Link>
+          <Link
+            to="/previous-years"
+            className="flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 text-stone-700 hover:bg-[#FAF9F5] border border-stone-200/60 hover:border-sky-400 bg-sky-50/40"
+          >
+            <i className="fa-solid fa-calendar-days text-base text-sky-600"></i>
+            <span>Previous Years</span>
+            <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-sky-200/70 text-sky-900">
+              127 Papers
             </span>
           </Link>
           <Link

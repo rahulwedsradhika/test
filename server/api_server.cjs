@@ -80,6 +80,16 @@ try {
 }
 const { handleTagwiseRoutes } = require('./tagwise_routes.cjs');
 
+const DB_PATH_PYP = resolveDbPath('previous_years_fresh.sqlite');
+let pypDb;
+try {
+  pypDb = new DatabaseSync(DB_PATH_PYP);
+  console.log('[API Server] Connected to Phase 6 Previous Year Papers DB (3 Groups, 127 Tests):', DB_PATH_PYP);
+} catch (e) {
+  console.error('[API Server] Error opening Previous Year Papers DB:', e.message);
+}
+const { handlePreviousYearsRoutes } = require('./previous_years_routes.cjs');
+
 if (sessionsDb) {
   try {
     sessionsDb.exec(`
@@ -118,6 +128,24 @@ CREATE TABLE IF NOT EXISTS tagwise_attempts (
         score REAL DEFAULT 0,
         total_marks REAL DEFAULT 0,
         accuracy REAL DEFAULT 0
+      );
+      CREATE TABLE IF NOT EXISTS pyp_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        test_uid TEXT NOT NULL,
+        user_id TEXT DEFAULT 'student-guest',
+        status TEXT DEFAULT 'in_progress',
+        answers_json TEXT DEFAULT '{}',
+        marked_for_review_json TEXT DEFAULT '[]',
+        time_remaining_seconds INTEGER,
+        time_spent_seconds INTEGER DEFAULT 0,
+        score REAL DEFAULT 0,
+        max_marks REAL DEFAULT 0,
+        accuracy_percent REAL DEFAULT 0,
+        correct_count INTEGER DEFAULT 0,
+        incorrect_count INTEGER DEFAULT 0,
+        unattempted_count INTEGER DEFAULT 0,
+        started_at TEXT,
+        completed_at TEXT
       );
     `);
   } catch (e) {
@@ -1725,6 +1753,11 @@ const server = http.createServer(async (req, res) => {
 
 // Phase 5: Tagwise Routes
   if (await handleTagwiseRoutes(req, res, pathname, req.method, params, tagwiseDb, sessionsDb, sendJSON, parseBody)) {
+    return;
+  }
+
+  // Phase 6: Previous Year Papers Routes
+  if (await handlePreviousYearsRoutes(req, res, pathname, req.method, params, pypDb, sessionsDb, sendJSON, parseBody)) {
     return;
   }
 

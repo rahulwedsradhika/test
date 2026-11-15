@@ -1,4 +1,8 @@
-import { TagCategory, TagQuestion, TagwisePracticeSession, TagwiseScorecard, TagwiseReviewQuestion, SamhitaNode, SubjectNode, NodeDetail, PracticeSessionResponse, PracticeResult, CoverageReport } from './types';
+import {
+  TagCategory, TagQuestion, TagwisePracticeSession, TagwiseScorecard, TagwiseReviewQuestion,
+  PreviousYearGroup, PreviousYearTest, PYPExamQuestion, PYPScorecard, PYPReviewQuestion,
+  SamhitaNode, SubjectNode, NodeDetail, PracticeSessionResponse, PracticeResult, CoverageReport
+} from './types';
 
 const BASE_URL = '/api';
 
@@ -297,5 +301,151 @@ export async function fetchTagwiseResults(attemptId: string): Promise<{
 export async function fetchTagwiseAudit(): Promise<any> {
   const res = await fetch(`${BASE_URL}/tagwise/audit`);
   if (!res.ok) throw new Error('Failed to fetch Tagwise audit');
+  return res.json();
+}
+
+// Phase 6: Previous Year Papers API
+export async function fetchPreviousYearGroups(): Promise<{
+  success: boolean;
+  total_groups: number;
+  total_expected_memberships: number;
+  total_catalogued_memberships: number;
+  total_ready_memberships: number;
+  total_unique_tests: number;
+  total_unique_questions: number;
+  groups: PreviousYearGroup[];
+}> {
+  const res = await fetch(`${BASE_URL}/previous-years/groups`);
+  if (!res.ok) throw new Error(`Failed to fetch PYP groups: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchPreviousYearGroup(groupId: string): Promise<{ success: boolean; group: PreviousYearGroup }> {
+  const res = await fetch(`${BASE_URL}/previous-years/groups/${encodeURIComponent(groupId)}`);
+  if (!res.ok) throw new Error(`Failed to fetch PYP group ${groupId}: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchPreviousYearGroupTests(
+  groupId: string,
+  options: { search?: string; year?: string; limit?: number; offset?: number } = {}
+): Promise<{
+  success: boolean;
+  group: PreviousYearGroup;
+  total: number;
+  available_years: string[];
+  tests: PreviousYearTest[];
+}> {
+  const params = new URLSearchParams();
+  if (options.search) params.append('search', options.search);
+  if (options.year) params.append('year', options.year);
+  if (options.limit) params.append('limit', options.limit.toString());
+  if (options.offset) params.append('offset', options.offset.toString());
+
+  const res = await fetch(`${BASE_URL}/previous-years/groups/${encodeURIComponent(groupId)}/tests?${params.toString()}`);
+  if (!res.ok) throw new Error(`Failed to fetch tests for group ${groupId}: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchPreviousYearTest(testId: string): Promise<{ success: boolean; test: PreviousYearTest }> {
+  const res = await fetch(`${BASE_URL}/previous-years/tests/${encodeURIComponent(testId)}`);
+  if (!res.ok) throw new Error(`Failed to fetch test ${testId}: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchPreviousYearTestQuestions(
+  testId: string,
+  mode: 'exam' | 'study' = 'exam'
+): Promise<{
+  success: boolean;
+  test_uid: string;
+  test_title: string;
+  mode: string;
+  total_questions: number;
+  duration_seconds: number;
+  max_marks: number;
+  negative_marking: string;
+  questions: PYPExamQuestion[];
+}> {
+  const res = await fetch(`${BASE_URL}/previous-years/tests/${encodeURIComponent(testId)}/questions?mode=${mode}`);
+  if (!res.ok) throw new Error(`Failed to fetch questions for test ${testId}: ${res.statusText}`);
+  return res.json();
+}
+
+export async function startPYPAttempt(testUid: string): Promise<{
+  success: boolean;
+  attempt_id: string;
+  test_uid: string;
+  test_title: string;
+  duration_seconds: number;
+  status: string;
+  started_at: string;
+}> {
+  const res = await fetch(`${BASE_URL}/previous-years/attempts/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ test_uid: testUid })
+  });
+  if (!res.ok) throw new Error('Failed to start test attempt');
+  return res.json();
+}
+
+export async function savePYPAttempt(
+  attemptId: string,
+  data: {
+    answers: Record<string, string>;
+    marked_for_review?: string[];
+    time_remaining_seconds?: number;
+    time_spent_seconds?: number;
+  }
+): Promise<{ success: boolean; saved_at: string }> {
+  const res = await fetch(`${BASE_URL}/previous-years/attempts/${encodeURIComponent(attemptId)}/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to autosave attempt');
+  return res.json();
+}
+
+export async function submitPYPAttempt(
+  attemptId: string,
+  data: {
+    answers: Record<string, string>;
+    time_spent_seconds?: number;
+  }
+): Promise<{
+  success: boolean;
+  attempt_id: string;
+  score: number;
+  max_marks: number;
+  accuracy_percent: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  completed_at: string;
+}> {
+  const res = await fetch(`${BASE_URL}/previous-years/attempts/${encodeURIComponent(attemptId)}/submit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to submit test attempt');
+  return res.json();
+}
+
+export async function fetchPYPResults(attemptId: string): Promise<{
+  success: boolean;
+  scorecard: PYPScorecard;
+  questions: PYPReviewQuestion[];
+}> {
+  const res = await fetch(`${BASE_URL}/previous-years/attempts/${encodeURIComponent(attemptId)}/results`);
+  if (!res.ok) throw new Error('Failed to fetch test results');
+  return res.json();
+}
+
+export async function fetchPYPAudit(): Promise<any> {
+  const res = await fetch(`${BASE_URL}/previous-years/audit`);
+  if (!res.ok) throw new Error('Failed to fetch PYP audit');
   return res.json();
 }
