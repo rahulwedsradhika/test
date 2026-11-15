@@ -13,25 +13,18 @@ function resolveDbPath(filename) {
   const source = path.resolve(__dirname, '../data', filename);
   const archived = source + '.gz';
   if (IS_VERCEL) {
-    if (filename === 'portal_sessions.sqlite') {
-      // Vercel deployments are read-only; temporary sessions are not durable.
-      const writable = path.join(os.tmpdir(), 'ayurvedsiddhi_portal_sessions.sqlite');
-      if (!fs.existsSync(writable)) {
-        if (!fs.existsSync(source)) throw new Error('Session database seed missing');
-        fs.copyFileSync(source, writable);
-      }
-      return writable;
-    }
-    if (fs.existsSync(source)) return source;
-    if (fs.existsSync(archived)) {
-      const writable = path.join(os.tmpdir(), filename);
-      if (!fs.existsSync(writable)) {
+    // Even read-only SQLite connections need writable sidecar/shm storage
+    // when the upstream database uses WAL mode. Vercel /var/task is read-only.
+    // Copy each database to isolated /tmp storage for reliable queries.
+    const writable = path.join(os.tmpdir(), 'ayurvedsiddhi_' + filename);
+    if (!fs.existsSync(writable)) {
+      if (fs.existsSync(source)) fs.copyFileSync(source, writable);
+      else if (fs.existsSync(archived)) {
         const zlib = require('zlib');
         fs.writeFileSync(writable, zlib.gunzipSync(fs.readFileSync(archived)));
-      }
-      return writable;
+      } else throw new Error('Missing bundled SQLite file: ' + filename);
     }
-    throw new Error('Missing bundled SQLite file: ' + filename);
+    return writable;
   }
   if (!fs.existsSync(source) && fs.existsSync(archived)) {
     const zlib = require('zlib');
