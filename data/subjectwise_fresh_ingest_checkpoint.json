@@ -1,0 +1,309 @@
+{
+  "run_id": "run_subjectwise_1794751885",
+  "completed_subjects": {
+    "SUB-001": {
+      "display_name": "Kayachikitsa",
+      "expected": 6759,
+      "validated": 6759,
+      "quarantined": 0,
+      "pages": 68,
+      "completed_at": "2026-11-15 14:12:06 UTC"
+    },
+    "SUB-002": {
+      "display_name": "Rog Nidana",
+      "expected": 6263,
+      "validated": 6263,
+      "quarantined": 0,
+      "pages": 63,
+      "completed_at": "2026-11-15 14:13:56 UTC"
+    },
+    "SUB-003": {
+      "display_name": "Dravyaguna Vigyan",
+      "expected": 5974,
+      "validated": 5975,
+      "quarantined": 0,
+      "pages": 60,
+      "completed_at": "2026-11-15 14:14:43 UTC"
+    },
+    "SUB-004": {
+      "display_name": "Shalya Tantra",
+      "expected": 4292,
+      "validated": 4292,
+      "quarantined": 0,
+      "pages": 43,
+      "completed_at": "2026-11-15 14:15:05 UTC"
+    },
+    "SUB-005": {
+      "display_name": "Shalakya Tantra",
+      "expected": 3331,
+      "validated": 3331,
+      "quarantined": 0,
+      "pages": 34,
+      "completed_at": "2026-11-15 14:15:21 UTC"
+    },
+    "SUB-006": {
+      "display_name": "Miscellaneous",
+      "expected": 3126,
+      "validated": 3200,
+      "quarantined": 0,
+      "pages": 32,
+      "completed_at": "2026-11-15 14:15:43 UTC"
+    },
+    "SUB-007": {
+      "display_name": "Panchkarma",
+      "expected": 2976,
+      "validated": 2976,
+      "quarantined": 0,
+      "pages": 30,
+      "completed_at": "2026-11-15 14:16:05 UTC"
+    },
+    "SUB-008": {
+      "display_name": "Swasthvrita",
+      "expected": 2166,
+      "validated": 2166,
+      "quarantined": 0,
+      "pages": 22,
+      "completed_at": "2026-11-15 14:16:21 UTC"
+    },
+    "SUB-009": {
+      "display_name": "Sharir Rachna",
+      "expected": 2138,
+      "validated": 2138,
+      "quarantined": 0,
+      "pages": 22,
+      "completed_at": "2026-11-15 14:16:43 UTC"
+    },
+    "SUB-010": {
+      "display_name": "Sharir Kriya",
+      "expected": 2115,
+      "validated": 2115,
+      "quarantined": 0,
+      "pages": 22,
+      "completed_at": "2026-11-15 14:17:00 UTC"
+    },
+    "SUB-011": {
+      "display_name": "Prasuti Tantra & Stri Roga",
+      "expected": 2064,
+      "validated": 2064,
+      "quarantined": 0,
+      "pages": 21,
+      "completed_at": "2026-11-15 14:17:22 UTC"
+    },
+    "SUB-012": {
+      "display_name": "Ras Shastra",
+      "expected": 2055,
+      "validated": 2056,
+      "quarantined": 0,
+      "pages": 21,
+      "completed_at": "2026-11-15 14:17:41 UTC"
+    },
+    "SUB-013": {
+      "display_name": "Bhaishajya Kalpna",
+      "expected": 1875,
+      "validated": 1875,
+      "quarantined": 0,
+      "pages": 19,
+      "completed_at": "2026-11-15 14:18:04 UTC"
+    },
+    "SUB-014": {
+      "display_name": "Padarth Vigyan",
+      "expected": 1790,
+      "validated": 1790,
+      "quarantined": 0,
+      "pages": 18,
+      "completed_at": "2026-11-15 14:18:21 UTC"
+    },
+    "SUB-015": {
+      "display_name": "History of Ayurveda",
+      "expected": 1518,
+      "validated": 1518,
+      "quarantined": 0,
+      "pages": 16,
+      "completed_at": "2026-11-15 14:18:34 UTC"
+    },
+    "SUB-016": {
+      "display_name": "Agad Tantra & Vyavhar Ayurveda",
+      "expected": 1494,
+      "validated": 1494,
+      "quarantined": 0,
+      "pages": 15,
+      "completed_at": "2026-11-15 14:18:52 UTC"
+    },
+    "SUB-017": {
+      "display_name": "Bal Roga",
+      "expected": 1324,
+      "validated": 1324,
+      "quarantined": 0,
+      "pages": 14,
+      "completed_at": "2026-11-15 14:19:04 UTC"
+    },
+    "SUB-018": {
+      "display_name": "General Knowledge",
+      "expected": 1312,
+      "validated": 1312,
+      "quarantined": 0,
+      "pages": 14,
+      "completed_at": "2026-11-15 14:19:13 UTC"
+    },
+    "SUB-019": {
+      "display_name": "Pathology",
+      "expected": 650,
+      "validated": 652,
+      "quarantined": 0,
+      "pages": 7,
+      "completed_at": "2026-11-15 14:19:19 UTC"
+    },
+    "SUB-020": {
+      "display_name": "Anatomy",
+      "expected": 536,
+      "validated": 536,
+      "quarantined": 0,
+      "pages": 6,
+      "completed_at": "2026-11-15 14:19:24 UTC"
+    },
+    "SUB-021": {
+      "display_name": "Physiology",
+      "expected": 460,
+      "validated": 463,
+      "quarantined": 0,
+      "pages": 5,
+      "completed_at": "2026-11-15 14:19:28 UTC"
+    },
+    "SUB-022": {
+      "display_name": "Medicine",
+      "expected": 392,
+      "validated": 396,
+      "quarantined": 0,
+      "pages": 4,
+      "completed_at": "2026-11-15 14:19:33 UTC"
+    },
+    "SUB-023": {
+      "display_name": "Obstetrics & Gynecology",
+      "expected": 387,
+      "validated": 387,
+      "quarantined": 0,
+      "pages": 4,
+      "completed_at": "2026-11-15 14:19:36 UTC"
+    },
+    "SUB-024": {
+      "display_name": "Rasayana Tantra",
+      "expected": 294,
+      "validated": 294,
+      "quarantined": 0,
+      "pages": 3,
+      "completed_at": "2026-11-15 14:19:41 UTC"
+    },
+    "SUB-025": {
+      "display_name": "Research & Statistics",
+      "expected": 270,
+      "validated": 271,
+      "quarantined": 0,
+      "pages": 3,
+      "completed_at": "2026-11-15 14:19:46 UTC"
+    },
+    "SUB-026": {
+      "display_name": "Sanskrit",
+      "expected": 242,
+      "validated": 242,
+      "quarantined": 0,
+      "pages": 3,
+      "completed_at": "2026-11-15 14:19:49 UTC"
+    },
+    "SUB-027": {
+      "display_name": "Paediatrics",
+      "expected": 221,
+      "validated": 221,
+      "quarantined": 0,
+      "pages": 3,
+      "completed_at": "2026-11-15 14:19:52 UTC"
+    },
+    "SUB-028": {
+      "display_name": "Preventive and Social Medicine",
+      "expected": 218,
+      "validated": 228,
+      "quarantined": 0,
+      "pages": 3,
+      "completed_at": "2026-11-15 14:19:54 UTC"
+    },
+    "SUB-029": {
+      "display_name": "Forensic Medicine & Toxicology",
+      "expected": 214,
+      "validated": 217,
+      "quarantined": 0,
+      "pages": 3,
+      "completed_at": "2026-11-15 14:19:57 UTC"
+    },
+    "SUB-030": {
+      "display_name": "Ayush General Knowledge",
+      "expected": 191,
+      "validated": 191,
+      "quarantined": 0,
+      "pages": 2,
+      "completed_at": "2026-11-15 14:19:59 UTC"
+    },
+    "SUB-031": {
+      "display_name": "Surgery",
+      "expected": 173,
+      "validated": 173,
+      "quarantined": 0,
+      "pages": 2,
+      "completed_at": "2026-11-15 14:20:01 UTC"
+    },
+    "SUB-032": {
+      "display_name": "Pharmacology",
+      "expected": 168,
+      "validated": 170,
+      "quarantined": 0,
+      "pages": 2,
+      "completed_at": "2026-11-15 14:20:04 UTC"
+    },
+    "SUB-033": {
+      "display_name": "Ophthalmology",
+      "expected": 136,
+      "validated": 136,
+      "quarantined": 0,
+      "pages": 2,
+      "completed_at": "2026-11-15 14:20:05 UTC"
+    },
+    "SUB-034": {
+      "display_name": "Vaajikarana Tantra",
+      "expected": 102,
+      "validated": 102,
+      "quarantined": 0,
+      "pages": 2,
+      "completed_at": "2026-11-15 14:20:09 UTC"
+    },
+    "SUB-035": {
+      "display_name": "Ear, Nose, and Throat",
+      "expected": 70,
+      "validated": 70,
+      "quarantined": 0,
+      "pages": 1,
+      "completed_at": "2026-11-15 14:20:10 UTC"
+    },
+    "SUB-036": {
+      "display_name": "Medical Ethics",
+      "expected": 59,
+      "validated": 59,
+      "quarantined": 0,
+      "pages": 1,
+      "completed_at": "2026-11-15 14:20:10 UTC"
+    },
+    "SUB-037": {
+      "display_name": "Health Regulations",
+      "expected": 12,
+      "validated": 12,
+      "quarantined": 0,
+      "pages": 1,
+      "completed_at": "2026-11-15 14:20:11 UTC"
+    },
+    "SUB-038": {
+      "display_name": "Orthopaedics",
+      "expected": 8,
+      "validated": 8,
+      "quarantined": 0,
+      "pages": 1,
+      "completed_at": "2026-11-15 14:20:12 UTC"
+    }
+  }
+}

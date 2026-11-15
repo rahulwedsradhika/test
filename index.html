@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Ayurvedic Samhita Practice Portal</title>
+    <!-- Google Fonts: Noto Serif Devanagari, Plus Jakarta Sans, Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ayur: {
+                teal: '#1A5344',
+                'teal-dark': '#133D32',
+                'teal-light': '#2A7B62',
+                'teal-subtle': '#E8F4F0',
+                sage: '#488B77',
+                clay: '#C45D48',
+                'clay-subtle': '#FDF2EE',
+                sand: '#E8E5DD',
+                ivory: '#FAF9F5',
+                card: '#FFFFFF',
+                dark: '#23342E',
+                muted: '#64746D'
+              }
+            },
+            fontFamily: {
+              serif: ['"Noto Serif Devanagari"', 'Georgia', 'serif'],
+              sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+              outfit: ['"Outfit"', 'system-ui', 'sans-serif']
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      .font-sanskrit { font-family: 'Noto Serif Devanagari', serif; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #F1EFEA; }
+      ::-webkit-scrollbar-thumb { background: #C4BEB2; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #A39B8C; }
+    </style>
+  </head>
+  <body class="bg-[#FAF9F5] text-[#23342E] antialiased selection:bg-[#1A5344] selection:text-white min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.DS_Store
+*.log
+*.sqlite-wal
+*.sqlite-shm
+data/subjectwise_fresh.sqlite
+data/fresh_samhita_questions.sqlite-wal
+data/fresh_samhita_questions.sqlite-shm
+data/phase2_fresh_questions.sqlite-wal
+data/phase2_fresh_questions.sqlite-shm
+data/*.backup.sqlite
+data/*.pre_phase3.sqlite

@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: 'Noto Serif Devanagari', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-primary: #1A5344;
+  --color-primary-light: #2A7B62;
+  --color-primary-bg: #E8F4F0;
+  --color-terracotta: #C45D48;
+  --color-terracotta-bg: #FDF2EE;
+  --color-gold: #B8860B;
+  --color-ivory: #FAF9F5;
+  --color-surface: #FFFFFF;
+  --color-border: #E8E5DD;
+  --color-text-main: #23342E;
+  --color-text-muted: #64746D;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ivory);
+  color: var(--color-text-main);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-sanskrit {
+  font-family: var(--font-serif);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1EFEA;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4BEB2;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A39B8C;
+}
+
+/* Card hover animation */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(26, 83, 68, 0.12);
+}
+
+/* Palette button status styles */
+.palette-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+.palette-btn-answered {
+  background-color: #2A7B62;
+  color: white;
+  border: 1px solid #1A5344;
+}
+.palette-btn-review {
+  background-color: #D97757;
+  color: white;
+  border: 1px solid #B85B3D;
+}
+.palette-btn-unanswered {
+  background-color: #FFFFFF;
+  color: #23342E;
+  border: 1px solid #D5D1C6;
+}
+.palette-btn-active {
+  ring: 2px solid #1A5344;
+  font-weight: 700;
+  transform: scale(1.08);
+}
+

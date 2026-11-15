@@ -1,0 +1,27 @@
+{
+  "name": "ayurvedsiddhi-portal",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node -e \"const fs = require('fs'), zlib = require('zlib'), path = require('path'); const gz = path.resolve('data/subjectwise_fresh.sqlite.gz'), out = path.resolve('data/subjectwise_fresh.sqlite'); if (!fs.existsSync(out) && fs.existsSync(gz)) { console.log('[postinstall] Unpacking subjectwise database...'); fs.writeFileSync(out, zlib.gunzipSync(fs.readFileSync(gz))); console.log('[postinstall] Ready!'); }\"",
+    "start": "node -e \"const { spawn } = require('child_process'); spawn('node', ['server/api_server.cjs'], { stdio: 'inherit' }); spawn('npx', ['vite', '--host', '127.0.0.1', '--port', '5167', '--strictPort'], { stdio: 'inherit', shell: true });\"",
+    "server": "node server/api_server.cjs",
+    "dev": "vite --host 127.0.0.1 --port 5167 --strictPort",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --port 5167",
+    "test": "python tests/test_phase3_e2e.py"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.1"
+  }
+}

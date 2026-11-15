@@ -1,0 +1,365 @@
+{
+  "status": "INCOMPLETE_OR_FAILED",
+  "subject_count": 38,
+  "expected_assignment_total": 57375,
+  "validated_assignment_total": 57476,
+  "distinct_fetched_question_records": 57476,
+  "quarantined_report_rows": 0,
+  "subjects": [
+    {
+      "id": "SUB-001",
+      "name": "Kayachikitsa",
+      "expected_assignments": 6759,
+      "validated_assignments": 6759,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-002",
+      "name": "Rog Nidana",
+      "expected_assignments": 6263,
+      "validated_assignments": 6263,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-003",
+      "name": "Dravyaguna Vigyan",
+      "expected_assignments": 5974,
+      "validated_assignments": 5975,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-004",
+      "name": "Shalya Tantra",
+      "expected_assignments": 4292,
+      "validated_assignments": 4292,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-005",
+      "name": "Shalakya Tantra",
+      "expected_assignments": 3331,
+      "validated_assignments": 3331,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-006",
+      "name": "Miscellaneous",
+      "expected_assignments": 3126,
+      "validated_assignments": 3200,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-007",
+      "name": "Panchkarma",
+      "expected_assignments": 2976,
+      "validated_assignments": 2976,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-008",
+      "name": "Swasthvrita",
+      "expected_assignments": 2166,
+      "validated_assignments": 2166,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-009",
+      "name": "Sharir Rachna",
+      "expected_assignments": 2138,
+      "validated_assignments": 2138,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-010",
+      "name": "Sharir Kriya",
+      "expected_assignments": 2115,
+      "validated_assignments": 2115,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-011",
+      "name": "Prasuti Tantra & Stri Roga",
+      "expected_assignments": 2064,
+      "validated_assignments": 2064,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-012",
+      "name": "Ras Shastra",
+      "expected_assignments": 2055,
+      "validated_assignments": 2056,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-013",
+      "name": "Bhaishajya Kalpna",
+      "expected_assignments": 1875,
+      "validated_assignments": 1875,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-014",
+      "name": "Padarth Vigyan",
+      "expected_assignments": 1790,
+      "validated_assignments": 1790,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-015",
+      "name": "History of Ayurveda",
+      "expected_assignments": 1518,
+      "validated_assignments": 1518,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-016",
+      "name": "Agad Tantra & Vyavhar Ayurveda",
+      "expected_assignments": 1494,
+      "validated_assignments": 1494,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-017",
+      "name": "Bal Roga",
+      "expected_assignments": 1324,
+      "validated_assignments": 1324,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-018",
+      "name": "General Knowledge",
+      "expected_assignments": 1312,
+      "validated_assignments": 1312,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-019",
+      "name": "Pathology",
+      "expected_assignments": 650,
+      "validated_assignments": 652,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-020",
+      "name": "Anatomy",
+      "expected_assignments": 536,
+      "validated_assignments": 536,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-021",
+      "name": "Physiology",
+      "expected_assignments": 460,
+      "validated_assignments": 463,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-022",
+      "name": "Medicine",
+      "expected_assignments": 392,
+      "validated_assignments": 396,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-023",
+      "name": "Obstetrics & Gynecology",
+      "expected_assignments": 387,
+      "validated_assignments": 387,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-024",
+      "name": "Rasayana Tantra",
+      "expected_assignments": 294,
+      "validated_assignments": 294,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-025",
+      "name": "Research & Statistics",
+      "expected_assignments": 270,
+      "validated_assignments": 271,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-026",
+      "name": "Sanskrit",
+      "expected_assignments": 242,
+      "validated_assignments": 242,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-027",
+      "name": "Paediatrics",
+      "expected_assignments": 221,
+      "validated_assignments": 221,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-028",
+      "name": "Preventive and Social Medicine",
+      "expected_assignments": 218,
+      "validated_assignments": 228,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-029",
+      "name": "Forensic Medicine & Toxicology",
+      "expected_assignments": 214,
+      "validated_assignments": 217,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-030",
+      "name": "Ayush General Knowledge",
+      "expected_assignments": 191,
+      "validated_assignments": 191,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-031",
+      "name": "Surgery",
+      "expected_assignments": 173,
+      "validated_assignments": 173,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-032",
+      "name": "Pharmacology",
+      "expected_assignments": 168,
+      "validated_assignments": 170,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-033",
+      "name": "Ophthalmology",
+      "expected_assignments": 136,
+      "validated_assignments": 136,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-034",
+      "name": "Vaajikarana Tantra",
+      "expected_assignments": 102,
+      "validated_assignments": 102,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-035",
+      "name": "Ear, Nose, and Throat",
+      "expected_assignments": 70,
+      "validated_assignments": 70,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-036",
+      "name": "Medical Ethics",
+      "expected_assignments": 59,
+      "validated_assignments": 59,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-037",
+      "name": "Health Regulations",
+      "expected_assignments": 12,
+      "validated_assignments": 12,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    },
+    {
+      "id": "SUB-038",
+      "name": "Orthopaedics",
+      "expected_assignments": 8,
+      "validated_assignments": 8,
+      "pending_assigned_records": 0,
+      "unfilled_assignments": 0,
+      "source_subject_id_verified": true
+    }
+  ],
+  "issues": [
+    "SUB-003: expected 5974, validated 5975",
+    "SUB-006: expected 3126, validated 3200",
+    "SUB-012: expected 2055, validated 2056",
+    "SUB-019: expected 650, validated 652",
+    "SUB-021: expected 460, validated 463",
+    "SUB-022: expected 392, validated 396",
+    "SUB-025: expected 270, validated 271",
+    "SUB-028: expected 218, validated 228",
+    "SUB-029: expected 214, validated 217",
+    "SUB-032: expected 168, validated 170"
+  ],
+  "note": "This script checks structural counts and minimal evidence; further API source review and answer-key validation are essential."
+}
