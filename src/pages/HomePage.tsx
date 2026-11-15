@@ -210,6 +210,16 @@ export const HomePage: React.FC = () => {
           </button>
 
           <Link
+            to="/tagwise"
+            className="flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 text-stone-700 hover:bg-[#FAF9F5] border border-stone-200/60 hover:border-emerald-400 bg-emerald-50/40"
+          >
+            <i className="fa-solid fa-tags text-base text-emerald-600"></i>
+            <span>Tagwise Bank</span>
+            <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-200/70 text-emerald-900">
+              6 Tags
+            </span>
+          </Link>
+          <Link
             to="/test-series"
             className="flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 text-stone-700 hover:bg-[#FAF9F5] border border-stone-200/60 hover:border-amber-400 bg-amber-50/40"
           >

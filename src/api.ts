@@ -1,4 +1,4 @@
-import { SamhitaNode, SubjectNode, NodeDetail, PracticeSessionResponse, PracticeResult, CoverageReport } from './types';
+import { TagCategory, TagQuestion, TagwisePracticeSession, TagwiseScorecard, TagwiseReviewQuestion, SamhitaNode, SubjectNode, NodeDetail, PracticeSessionResponse, PracticeResult, CoverageReport } from './types';
 
 const BASE_URL = '/api';
 
@@ -187,5 +187,115 @@ export async function submitTestAttempt(attemptId: string, answers: Record<strin
 export async function fetchTestResult(attemptId: string): Promise<any> {
   const res = await fetch(`${BASE_URL}/test-series/attempts/${encodeURIComponent(attemptId)}/result`);
   if (!res.ok) throw new Error('Failed to fetch test result');
+  return res.json();
+}
+
+// -------------------------------------------------------------------
+// PHASE 5: TAGWISE CLIENT METHODS (/api/tags & /api/tagwise)
+// -------------------------------------------------------------------
+
+export async function fetchTags(): Promise<{
+  success: boolean;
+  total_categories: number;
+  total_expected_assignments: number;
+  total_ready_assignments: number;
+  categories: TagCategory[];
+}> {
+  const res = await fetch(`${BASE_URL}/tags`);
+  if (!res.ok) throw new Error(`Failed to fetch tags: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchTagById(tagId: string): Promise<{ success: boolean; category: TagCategory }> {
+  const res = await fetch(`${BASE_URL}/tags/${encodeURIComponent(tagId)}`);
+  if (!res.ok) throw new Error(`Failed to fetch tag ${tagId}: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchTagQuestions(
+  tagId: string,
+  limit = 50,
+  offset = 0,
+  search = '',
+  includeAnswers = false
+): Promise<{
+  success: boolean;
+  tag_id: string;
+  tag_label: string;
+  total_questions: number;
+  limit: number;
+  offset: number;
+  questions: TagQuestion[];
+}> {
+  const params = new URLSearchParams({
+    limit: limit.toString(),
+    offset: offset.toString()
+  });
+  if (search) params.append('search', search);
+  if (includeAnswers) params.append('include_answers', 'true');
+  const res = await fetch(`${BASE_URL}/tags/${encodeURIComponent(tagId)}/questions?${params.toString()}`);
+  if (!res.ok) throw new Error(`Failed to fetch questions: ${res.statusText}`);
+  return res.json();
+}
+
+export async function startTagwisePractice(config: {
+  tagId: string;
+  questionCount: number;
+  durationMinutes: number;
+  shuffle?: boolean;
+}): Promise<TagwisePracticeSession> {
+  const res = await fetch(`${BASE_URL}/tagwise/practice/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to start Tagwise practice');
+  }
+  return res.json();
+}
+
+export async function saveTagwiseAttempt(
+  attemptId: string,
+  answers: Record<string, number>,
+  markedForReview: string[],
+  timeSpentSeconds: number
+): Promise<void> {
+  await fetch(`${BASE_URL}/tagwise/practice/${encodeURIComponent(attemptId)}/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ answers, markedForReview, timeSpentSeconds })
+  });
+}
+
+export async function submitTagwiseAttempt(
+  attemptId: string,
+  answers: Record<string, number>,
+  markedForReview: string[],
+  timeSpentSeconds: number
+): Promise<TagwiseScorecard> {
+  const res = await fetch(`${BASE_URL}/tagwise/practice/${encodeURIComponent(attemptId)}/submit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ answers, markedForReview, timeSpentSeconds })
+  });
+  if (!res.ok) throw new Error('Failed to submit Tagwise practice attempt');
+  return res.json();
+}
+
+export async function fetchTagwiseResults(attemptId: string): Promise<{
+  success: boolean;
+  attempt: TagwiseScorecard;
+  questions: TagwiseReviewQuestion[];
+}> {
+  const res = await fetch(`${BASE_URL}/tagwise/practice/${encodeURIComponent(attemptId)}/results`);
+  if (!res.ok) throw new Error('Failed to fetch Tagwise practice results');
+  return res.json();
+}
+
+export async function fetchTagwiseAudit(): Promise<any> {
+  const res = await fetch(`${BASE_URL}/tagwise/audit`);
+  if (!res.ok) throw new Error('Failed to fetch Tagwise audit');
   return res.json();
 }

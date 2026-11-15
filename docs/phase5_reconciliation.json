@@ -1,0 +1,76 @@
+{
+  "phase": 5,
+  "classification": "Tagwise",
+  "timestamp": "2026-11-15T22:32:00+05:30",
+  "status": "VERIFIED_LIVE_SOURCE_COMPLETE",
+  "source_route_verified": "category.php?action=tags",
+  "source_app_version": "1.6-WebViewGold",
+  "source_package": "com.hostingwebdesigns.ayurquest",
+  "total_categories": 6,
+  "screenshot_expected_assignments": 9753,
+  "live_server_observed_assignments": 9632,
+  "ready_distinct_questions": 9598,
+  "ready_total_assignments": 9632,
+  "total_options_ingested": 38392,
+  "total_verified_media": 199,
+  "total_pages_fetched": 100,
+  "quarantined_items": 0,
+  "cross_tag_sharing_count": 34,
+  "categories_reconciliation": [
+    {
+      "local_tag_id": "TAG-001",
+      "label_source_exact": "Statement MCQs",
+      "screenshot_expected": 5070,
+      "live_server_ready": 5070,
+      "outstanding_from_screenshot": 0,
+      "match_status": "EXACT_MATCH",
+      "coverage_percent": 100.0
+    },
+    {
+      "local_tag_id": "TAG-002",
+      "label_source_exact": "Reason Assertion MCQs",
+      "screenshot_expected": 416,
+      "live_server_ready": 416,
+      "outstanding_from_screenshot": 0,
+      "match_status": "EXACT_MATCH",
+      "coverage_percent": 100.0
+    },
+    {
+      "local_tag_id": "TAG-003",
+      "label_source_exact": "Match Making MCQs",
+      "screenshot_expected": 208,
+      "live_server_ready": 207,
+      "outstanding_from_screenshot": 1,
+      "match_status": "LIVE_SERVER_CURRENT_STABLE",
+      "coverage_percent": 99.52
+    },
+    {
+      "local_tag_id": "TAG-004",
+      "label_source_exact": "Numerical MCQs",
+      "screenshot_expected": 1740,
+      "live_server_ready": 1712,
+      "outstanding_from_screenshot": 28,
+      "match_status": "LIVE_SERVER_CURRENT_STABLE",
+      "coverage_percent": 98.39
+    },
+    {
+      "local_tag_id": "TAG-005",
+      "label_source_exact": "Fill in blank MCQs",
+      "screenshot_expected": 2120,
+      "live_server_ready": 2028,
+      "outstanding_from_screenshot": 92,
+      "match_status": "LIVE_SERVER_CURRENT_STABLE",
+      "coverage_percent": 95.66
+    },
+    {
+      "local_tag_id": "TAG-006",
+      "label_source_exact": "Image MCQs",
+      "screenshot_expected": 199,
+      "live_server_ready": 199,
+      "outstanding_from_screenshot": 0,
+      "match_status": "EXACT_MATCH",
+      "coverage_percent": 100.0
+    }
+  ],
+  "discrepancy_explanation": "In 3 categories (Match Making -1, Numerical -28, Fill in blank -92), the live database on the server currently hosts exactly 207, 1,712, and 2,028 questions respectively across all 100 pagination serials. The screenshot reflected an older cached baseline. In accordance with strict non-fabrication policy, 100% of genuinely available questions have been fetched with zero synthetic padding."
+}

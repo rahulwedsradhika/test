@@ -1,0 +1,95 @@
+{
+  "schema_version": "phase5-tagwise-mapping-1.0",
+  "project": "AyurvedSiddhi",
+  "phase": 5,
+  "classification": "Tagwise",
+  "source_section_title_exact": "TAG WISE QUESTIONS",
+  "source_image": "evidence/tagwise_source_screenshot.png",
+  "source_image_sha256": "4af422f6c26390e2df26909dbe475ba85a655a2642155f007378dc43370ef6a8",
+  "source_path_hint": "/category.php?action=tags",
+  "source_path_verified": false,
+  "http_method_verified": false,
+  "source_host_verified": false,
+  "source_native_ids_verified": false,
+  "source_window": {
+    "start_local_display": "15/11/2026 11:09:47",
+    "expiry_local_display": "15/12/2026 11:09:47",
+    "timezone": "unknown",
+    "semantic_note": "Screenshot period only. Verify server-side entitlement, applicability, expiry rules and timezone from legitimate source; do not assume global availability."
+  },
+  "navigation": "Tagwise > Tag Category > Direct Question Practice > Results",
+  "category_count": 6,
+  "expected_question_assignments": 9753,
+  "unique_source_questions": null,
+  "fresh_fetch_required": true,
+  "contains_fetched_questions": false,
+  "metadata_status": "verified_from_user_screenshot",
+  "categories": [
+    {
+      "local_id": "TAG-001",
+      "display_order": 1,
+      "source_label_exact": "Statement MCQs",
+      "expected_question_assignments": 5070,
+      "navigation_type": "direct_questions",
+      "source_native_tag_id": null,
+      "source_endpoint_verified": false,
+      "fetched_question_assignments": 0,
+      "metadata_status": "mapping_only"
+    },
+    {
+      "local_id": "TAG-002",
+      "display_order": 2,
+      "source_label_exact": "Reason Assertion MCQs",
+      "expected_question_assignments": 416,
+      "navigation_type": "direct_questions",
+      "source_native_tag_id": null,
+      "source_endpoint_verified": false,
+      "fetched_question_assignments": 0,
+      "metadata_status": "mapping_only"
+    },
+    {
+      "local_id": "TAG-003",
+      "display_order": 3,
+      "source_label_exact": "Match Making MCQs",
+      "expected_question_assignments": 208,
+      "navigation_type": "direct_questions",
+      "source_native_tag_id": null,
+      "source_endpoint_verified": false,
+      "fetched_question_assignments": 0,
+      "metadata_status": "mapping_only"
+    },
+    {
+      "local_id": "TAG-004",
+      "display_order": 4,
+      "source_label_exact": "Numerical MCQs",
+      "expected_question_assignments": 1740,
+      "navigation_type": "direct_questions",
+      "source_native_tag_id": null,
+      "source_endpoint_verified": false,
+      "fetched_question_assignments": 0,
+      "metadata_status": "mapping_only"
+    },
+    {
+      "local_id": "TAG-005",
+      "display_order": 5,
+      "source_label_exact": "Fill in blank MCQs",
+      "expected_question_assignments": 2120,
+      "navigation_type": "direct_questions",
+      "source_native_tag_id": null,
+      "source_endpoint_verified": false,
+      "fetched_question_assignments": 0,
+      "metadata_status": "mapping_only"
+    },
+    {
+      "local_id": "TAG-006",
+      "display_order": 6,
+      "source_label_exact": "Image MCQs",
+      "expected_question_assignments": 199,
+      "navigation_type": "direct_questions",
+      "source_native_tag_id": null,
+      "source_endpoint_verified": false,
+      "fetched_question_assignments": 0,
+      "metadata_status": "mapping_only"
+    }
+  ]
+}

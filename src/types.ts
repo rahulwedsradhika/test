@@ -236,3 +236,86 @@ export interface ExamReviewQuestion {
     is_correct: boolean;
   }[];
 }
+
+export interface TagCategory {
+  local_tag_id: string;
+  display_order: number;
+  label_source_exact: string;
+  expected_count: number;
+  native_tag_id: string;
+  source_path_verified: string;
+  source_access_state: string;
+  ingestion_status: string;
+  ready_count: number;
+  outstanding_count: number;
+}
+
+export interface TagQuestion {
+  question_uid: string;
+  source_question_id: string;
+  stem: string;
+  options: {
+    option_position: number;
+    option_source_raw: string;
+    is_correct_verified?: number;
+  }[];
+  media?: {
+    media_uid: string;
+    kind: string;
+    mime_type: string;
+    content_sha256: string;
+  }[];
+  explanation?: string;
+}
+
+export interface TagwisePracticeSession {
+  success: boolean;
+  attempt_id: string;
+  tag_id: string;
+  tag_label: string;
+  total_questions: number;
+  duration_minutes: number;
+  questions: {
+    index: number;
+    question_uid: string;
+    source_question_id: string;
+    stem: string;
+    options: {
+      option_position: number;
+      option_source_raw: string;
+    }[];
+  }[];
+}
+
+export interface TagwiseScorecard {
+  attempt_id: string;
+  tag_id: string;
+  tag_label: string;
+  started_at: string;
+  submitted_at: string;
+  time_spent_seconds: number;
+  total_questions: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  score: number;
+  total_marks: number;
+  accuracy_percent: number;
+}
+
+export interface TagwiseReviewQuestion {
+  index: number;
+  question_uid: string;
+  source_question_id: string;
+  stem: string;
+  explanation: string | null;
+  options: {
+    position: number;
+    text: string;
+    is_correct: boolean;
+  }[];
+  selected_position: number | null;
+  correct_position: number | null;
+  is_correct: boolean;
+  is_marked_for_review: boolean;
+}

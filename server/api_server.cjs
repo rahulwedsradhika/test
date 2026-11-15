@@ -70,6 +70,15 @@ try {
 } catch (e) {
   console.error('[API Server] Error opening Test Series DB:', e.message);
 }
+const DB_PATH_TAGWISE = resolveDbPath('tagwise_fresh.sqlite');
+let tagwiseDb;
+try {
+  tagwiseDb = new DatabaseSync(DB_PATH_TAGWISE);
+  console.log('[API Server] Connected to Phase 5 Tagwise DB (6 Categories, 9,632 Assignments):', DB_PATH_TAGWISE);
+} catch (e) {
+  console.error('[API Server] Error opening Tagwise DB:', e.message);
+}
+const { handleTagwiseRoutes } = require('./tagwise_routes.cjs');
 
 if (sessionsDb) {
   try {
@@ -84,6 +93,24 @@ if (sessionsDb) {
         status TEXT DEFAULT 'in_progress',
         answers_json TEXT DEFAULT '{}',
         marked_for_review_json TEXT DEFAULT '[]',
+        total_questions INTEGER DEFAULT 0,
+        correct_count INTEGER DEFAULT 0,
+        incorrect_count INTEGER DEFAULT 0,
+        unattempted_count INTEGER DEFAULT 0,
+        score REAL DEFAULT 0,
+        total_marks REAL DEFAULT 0,
+        accuracy REAL DEFAULT 0
+      );
+CREATE TABLE IF NOT EXISTS tagwise_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        tag_id TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        submitted_at TEXT,
+        time_spent_seconds INTEGER DEFAULT 0,
+        status TEXT DEFAULT 'in_progress',
+        answers_json TEXT DEFAULT '{}',
+        marked_for_review_json TEXT DEFAULT '[]',
+        question_uids_json TEXT DEFAULT '[]',
         total_questions INTEGER DEFAULT 0,
         correct_count INTEGER DEFAULT 0,
         incorrect_count INTEGER DEFAULT 0,
@@ -1694,6 +1721,11 @@ const server = http.createServer(async (req, res) => {
       console.error('[API /api/test-series/attempts/:id/result Error]', e);
       return sendJSON(res, { error: e.message }, 500);
     }
+  }
+
+// Phase 5: Tagwise Routes
+  if (await handleTagwiseRoutes(req, res, pathname, req.method, params, tagwiseDb, sessionsDb, sendJSON, parseBody)) {
+    return;
   }
 
   return sendJSON(res, { error: 'Route not found' }, 404);

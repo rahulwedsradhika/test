@@ -1,10 +1,10 @@
-# AyurvedSiddhi — Classical Samhitawise, Subjectwise & Test Series MCQ Portal
+# AyurvedSiddhi — Classical Samhitawise, Subjectwise, Test Series & Tagwise MCQ Portal
 
 An authentic, student-first Ayurvedic question practice and examination platform.
 
 **Live Application URL:** [http://localhost:5167](http://localhost:5167)  
 **Backend API URL:** [http://localhost:5168](http://localhost:5168)  
-**Total Validated Questions:** **151,830** (57,452 Samhitawise + 57,476 Subjectwise + 36,902 Test Series)
+**Total Validated Questions:** **161,462** (57,452 Samhitawise + 57,476 Subjectwise + 36,902 Test Series + 9,632 Tagwise)
 
 ---
 
@@ -26,11 +26,17 @@ An authentic, student-first Ayurvedic question practice and examination platform
     - **2026–2027:** AIAPGET 2027 (35 Tests), UPPSC 2026 (87 Tests)
     - **2025–2026:** AyurQuest UPSC 2025 (65 Tests), Free AIAPGET 2026 (35 Tests)
     - **2024–2025:** AyurQuest UPSC 2024 (55 Tests), Free AIAPGET 2025 (35 Tests), HPSC 2024–2025 (50 Tests)
-  - **Full Examination Lifecycle Simulator:**
-    - Test Overview & Instructions with duration, marks (+4/-1 or +3/-1), and palette rules.
-    - Full-screen examination view with live countdown timer, auto-warning states, and question palette (1..N).
-    - In-progress autosave, answer changing, mark-for-review, and submit confirmation modal.
-    - Scorecard (+score/max, accuracy %, speed, answer breakdown) and in-depth classical solutions review with commentary.
+  - Full examination lifecycle simulator with timers, autosave, +4/-1 scoring, and solutions review.
+
+- **🏷️ New Pattern Tagwise Question Bank (6 Categories • 9,632 Questions):**
+  - Cognitive format classification following the latest NTA/AIAPGET exam pattern:
+    - **Statement MCQs:** 5,070 Questions (Statement 1 vs Statement 2 evaluation)
+    - **Reason Assertion MCQs:** 416 Questions (Logical causality and assertion-reason relationships)
+    - **Match Making MCQs:** 207 Questions (Classical matching pairs, disease-treatment tables)
+    - **Numerical MCQs:** 1,712 Questions (Ayurvedic measurements, gana counts, quantitative shlokas)
+    - **Fill in blank MCQs:** 2,028 Questions (Shloka completion, definition terminology)
+    - **Image MCQs:** 199 Questions (Botanical drugs, surgical yantras/shastras, anatomical diagrams)
+  - Direct practice configuration, customizable question counts, timer, 1..N palette, and instant review.
 
 ---
 
@@ -72,6 +78,9 @@ npm run server
 # Build production bundle
 npm run build
 
+# Run Phase 5 Tagwise End-to-End Test Suite
+python tests/test_phase5_e2e.py
+
 # Run Phase 4 Test Series End-to-End Test Suite
 python tests/test_phase4_e2e.py
 
@@ -89,21 +98,24 @@ python tests/test_phase3_e2e.py
 │   ├── phase2_fresh_questions.sqlite     # Phase 2: 31,339 questions (14 Samhitas)
 │   ├── subjectwise_fresh.sqlite.gz       # Phase 3: 57,476 questions (38 Subjects, GZ archive)
 │   ├── testseries_fresh.sqlite           # Phase 4: 362 Tests, 36,902 questions (7 Series)
+│   ├── tagwise_fresh.sqlite              # Phase 5: 6 Categories, 9,632 questions
 │   └── portal_sessions.sqlite            # Practice attempts, bookmarks, exam history
 ├── docs/                                 # Audit evidence, crosswalks & screenshots
+│   ├── phase5_reconciliation.json        # 6 Tagwise categories audit ledger
+│   ├── phase5_api_evidence.md            # REA discovery and Tagwise protocol traces
 │   ├── phase4_reconciliation.json        # 7 series, 362 tests audit ledger
-│   ├── phase4_api_evidence.md            # REA discovery and API protocol traces
 │   ├── phase3_subjectwise_crosswalk.json # 38 subjects native ID crosswalk
-│   ├── phase3_reconciliation.json        # 38 subjects post-fetch audit
 │   └── screenshots/                      # Responsive screenshots (Desktop, Tablet, Mobile)
 ├── server/
-│   └── api_server.cjs                    # Unified API server with test series routes
+│   ├── api_server.cjs                    # Unified API server
+│   └── tagwise_routes.cjs                # Phase 5 Tagwise routes handler
 ├── src/                                  # React 18 + TailwindCSS + Vite frontend
 │   ├── components/                       # Modals, Navbar, Question Palette, Breadcrumbs
-│   ├── pages/                            # Home, Test Series, Exam Screen, Results, Subjects
+│   ├── pages/                            # Home, Tagwise, Test Series, Subjects, Exam, Results
 │   ├── api.ts                            # REST API client
 │   └── types.ts                          # TypeScript domain interfaces
 ├── tests/
+│   ├── test_phase5_e2e.py                # Phase 5 Tagwise E2E verification suite
 │   ├── test_phase4_e2e.py                # Phase 4 Test Series E2E verification suite
 │   └── test_phase3_e2e.py                # Phase 3 Subjectwise E2E verification suite
 └── package.json
@@ -113,4 +125,4 @@ python tests/test_phase3_e2e.py
 
 ## License & Integrity
 
-All 151,830 questions originate from authenticated source extractions with cryptographic SHA-256 signatures recorded in the audit ledger. No synthetic or AI-generated questions are used.
+All 161,462 questions originate from authenticated source extractions with cryptographic SHA-256 signatures recorded in the audit ledger. No synthetic or AI-generated questions are used.
