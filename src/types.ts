@@ -143,3 +143,96 @@ export interface CoverageReport {
   subjectwise_expected?: number;
   nodes: CoverageNode[];
 }
+
+export interface TestSeriesSession {
+  session: string;
+  series_count: number;
+  total_tests: number;
+  available_tests: number;
+  scheduled_tests: number;
+  total_questions: number;
+}
+
+export interface TestSeriesCard {
+  local_series_id: string;
+  session: string;
+  title_source_exact: string;
+  expected_test_count: number;
+  start_date_iso: string;
+  end_date_iso: string;
+  students_enrolled_source: number;
+  access_badge_source: 'FREE' | 'PAID';
+  exam_button_label_source: string;
+  action_button_label_source: string;
+  verified_test_count: number;
+  available_test_count: number;
+  scheduled_test_count: number;
+  questions_count: number;
+  description?: string;
+}
+
+export interface SeriesTestItem {
+  local_test_id: string;
+  source_test_id: string;
+  title_source_exact: string;
+  source_order: number;
+  scheduled_at_source: string;
+  duration_minutes: number;
+  source_question_count: number;
+  marks_per_correct: number;
+  marks_per_incorrect: number;
+  availability_status: 'available' | 'scheduled';
+  validation_status: string;
+  questions_count: number;
+}
+
+export interface ExamQuestion {
+  local_question_id: string;
+  question_position: number;
+  question_text: string;
+  original_language: string;
+  options: {
+    position: number;
+    option_text: string;
+  }[];
+}
+
+export interface ExamScorecard {
+  attempt_id: string;
+  test_id: string;
+  test_title: string;
+  series_title: string;
+  session: string;
+  status: string;
+  started_at: string;
+  submitted_at: string;
+  time_spent_seconds: number;
+  total_questions: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  score: number;
+  total_marks: number;
+  accuracy_percent: number;
+}
+
+export interface ExamReviewQuestion {
+  local_question_id: string;
+  question_position: number;
+  question_text: string;
+  user_answer: number | null;
+  correct_answer: number;
+  is_correct: boolean;
+  is_attempted: boolean;
+  explanation: string;
+  reference: {
+    samhita: string;
+    sthana: string;
+    subject: string;
+  };
+  options: {
+    position: number;
+    option_text: string;
+    is_correct: boolean;
+  }[];
+}

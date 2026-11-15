@@ -119,3 +119,73 @@ export async function fetchHistory(): Promise<any[]> {
   if (!res.ok) throw new Error(`Failed to fetch history: ${res.statusText}`);
   return res.json();
 }
+
+// --- PHASE 4 TEST SERIES CLIENT APIs ---
+
+export async function fetchTestSeriesSessions(): Promise<any[]> {
+  const res = await fetch(`${BASE_URL}/test-series/sessions`);
+  if (!res.ok) throw new Error('Failed to fetch test series sessions');
+  return res.json();
+}
+
+export async function fetchTestSeries(session?: string): Promise<any[]> {
+  const url = session ? `${BASE_URL}/test-series?session=${encodeURIComponent(session)}` : `${BASE_URL}/test-series`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Failed to fetch test series');
+  return res.json();
+}
+
+export async function fetchTestSeriesDetail(seriesId: string): Promise<any> {
+  const res = await fetch(`${BASE_URL}/test-series/${encodeURIComponent(seriesId)}`);
+  if (!res.ok) throw new Error(`Failed to fetch series ${seriesId}`);
+  return res.json();
+}
+
+export async function fetchTestDetail(testId: string): Promise<any> {
+  const res = await fetch(`${BASE_URL}/test-series/tests/${encodeURIComponent(testId)}`);
+  if (!res.ok) throw new Error(`Failed to fetch test ${testId}`);
+  return res.json();
+}
+
+export async function fetchExamQuestions(testId: string): Promise<any> {
+  const res = await fetch(`${BASE_URL}/test-series/tests/${encodeURIComponent(testId)}/questions`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Failed to fetch questions: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function startTestAttempt(testId: string): Promise<any> {
+  const res = await fetch(`${BASE_URL}/test-series/attempts`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ test_id: testId })
+  });
+  if (!res.ok) throw new Error('Failed to start test attempt');
+  return res.json();
+}
+
+export async function saveTestProgress(attemptId: string, answers: Record<string, number>, markedForReview: string[], timeSpentSeconds: number): Promise<void> {
+  await fetch(`${BASE_URL}/test-series/attempts/${encodeURIComponent(attemptId)}/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ answers, marked_for_review: markedForReview, time_spent_seconds: timeSpentSeconds })
+  });
+}
+
+export async function submitTestAttempt(attemptId: string, answers: Record<string, number>, timeSpentSeconds: number): Promise<any> {
+  const res = await fetch(`${BASE_URL}/test-series/attempts/${encodeURIComponent(attemptId)}/submit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ answers, time_spent_seconds: timeSpentSeconds })
+  });
+  if (!res.ok) throw new Error('Failed to submit test attempt');
+  return res.json();
+}
+
+export async function fetchTestResult(attemptId: string): Promise<any> {
+  const res = await fetch(`${BASE_URL}/test-series/attempts/${encodeURIComponent(attemptId)}/result`);
+  if (!res.ok) throw new Error('Failed to fetch test result');
+  return res.json();
+}

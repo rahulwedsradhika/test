@@ -1,0 +1,99 @@
+{
+  "phase": "Phase 4: Real Test Series Integration",
+  "timestamp": "2026-11-15T21:30:00+05:30",
+  "total_sessions": 3,
+  "total_series": 7,
+  "expected_tests": 362,
+  "verified_tests": 362,
+  "quarantined_tests": 0,
+  "available_tests": 336,
+  "scheduled_tests": 26,
+  "total_questions_ingested": 36902,
+  "all_counts_match": true,
+  "series_breakdown": [
+    {
+      "local_series_id": "TS-2024-25-01",
+      "session": "2024-2025",
+      "title_source_exact": "AYURQUEST UPSC - 2024 TEST SERIES",
+      "expected_test_count": 55,
+      "total_tests": 55,
+      "verified_tests": 55,
+      "quarantined_tests": 0,
+      "available_tests": 55,
+      "scheduled_tests": 0,
+      "total_questions": 5500
+    },
+    {
+      "local_series_id": "TS-2024-25-02",
+      "session": "2024-2025",
+      "title_source_exact": "FREE AIAPGET 2025 TEST SERIES",
+      "expected_test_count": 35,
+      "total_tests": 35,
+      "verified_tests": 35,
+      "quarantined_tests": 0,
+      "available_tests": 35,
+      "scheduled_tests": 0,
+      "total_questions": 4202
+    },
+    {
+      "local_series_id": "TS-2024-25-03",
+      "session": "2024-2025",
+      "title_source_exact": "HPSC TEST SERIES 2024-2025",
+      "expected_test_count": 50,
+      "total_tests": 50,
+      "verified_tests": 50,
+      "quarantined_tests": 0,
+      "available_tests": 50,
+      "scheduled_tests": 0,
+      "total_questions": 5000
+    },
+    {
+      "local_series_id": "TS-2025-26-01",
+      "session": "2025-2026",
+      "title_source_exact": "AYURQUEST UPSC - 2025 TEST SERIES",
+      "expected_test_count": 65,
+      "total_tests": 65,
+      "verified_tests": 65,
+      "quarantined_tests": 0,
+      "available_tests": 65,
+      "scheduled_tests": 0,
+      "total_questions": 6500
+    },
+    {
+      "local_series_id": "TS-2025-26-02",
+      "session": "2025-2026",
+      "title_source_exact": "FREE AIAPGET 2026 TEST SERIES",
+      "expected_test_count": 35,
+      "total_tests": 35,
+      "verified_tests": 35,
+      "quarantined_tests": 0,
+      "available_tests": 35,
+      "scheduled_tests": 0,
+      "total_questions": 4200
+    },
+    {
+      "local_series_id": "TS-2026-27-01",
+      "session": "2026-2027",
+      "title_source_exact": "FREE AIAPGET 2027 TEST SERIES",
+      "expected_test_count": 35,
+      "total_tests": 35,
+      "verified_tests": 35,
+      "quarantined_tests": 0,
+      "available_tests": 9,
+      "scheduled_tests": 26,
+      "total_questions": 1080
+    },
+    {
+      "local_series_id": "TS-2026-27-02",
+      "session": "2026-2027",
+      "title_source_exact": "UPPSC TEST SERIES - 2026",
+      "expected_test_count": 87,
+      "total_tests": 87,
+      "verified_tests": 87,
+      "quarantined_tests": 0,
+      "available_tests": 87,
+      "scheduled_tests": 0,
+      "total_questions": 10420
+    }
+  ]
+}

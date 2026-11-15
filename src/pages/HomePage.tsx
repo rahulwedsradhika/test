@@ -161,12 +161,12 @@ export const HomePage: React.FC = () => {
               <div className="text-xs text-white/70">Subjectwise Validated</div>
             </div>
             <div>
-              <div className="text-xl sm:text-2xl font-bold font-outfit text-[#FCD34D]">17 + 38</div>
-              <div className="text-xs text-white/70">Total Categories Ready</div>
+              <div className="text-xl sm:text-2xl font-bold font-outfit text-amber-300">362 Tests</div>
+              <div className="text-xs text-white/70">7 National Series (36,902 Qs)</div>
             </div>
             <div>
-              <div className="text-xl sm:text-2xl font-bold font-outfit text-white">100% Live</div>
-              <div className="text-xs text-white/70">Authentic Questions Only</div>
+              <div className="text-xl sm:text-2xl font-bold font-outfit text-white">151,830 Live</div>
+              <div className="text-xs text-white/70">Total Authenticated Qs</div>
             </div>
           </div>
         </div>
@@ -174,40 +174,51 @@ export const HomePage: React.FC = () => {
 
       {/* Primary Hub Navigation Tabs */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-2.5 rounded-2xl border border-[#E8E5DD] shadow-xs">
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => handleSwitchHub('subjectwise')}
-            className={`flex-1 sm:flex-initial px-5 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
               mainHub === 'subjectwise'
                 ? 'bg-[#1A5344] text-white shadow-md'
                 : 'text-[#64746D] hover:bg-[#FAF9F5] border border-transparent hover:border-[#E8E5DD]'
             }`}
           >
             <i className="fa-solid fa-graduation-cap text-base"></i>
-            <span>Subjectwise Question Bank</span>
+            <span>Subjectwise</span>
             <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
               mainHub === 'subjectwise' ? 'bg-[#2A7B62] text-white' : 'bg-[#E8F4F0] text-[#1A5344]'
             }`}>
-              38 Subjects
+              38
             </span>
           </button>
 
           <button
             onClick={() => handleSwitchHub('samhitawise')}
-            className={`flex-1 sm:flex-initial px-5 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
               mainHub === 'samhitawise'
                 ? 'bg-[#1A5344] text-white shadow-md'
                 : 'text-[#64746D] hover:bg-[#FAF9F5] border border-transparent hover:border-[#E8E5DD]'
             }`}
           >
             <i className="fa-solid fa-book-bookmark text-base"></i>
-            <span>Classical Samhitawise</span>
+            <span>Samhitawise</span>
             <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${
               mainHub === 'samhitawise' ? 'bg-[#2A7B62] text-white' : 'bg-[#E8F4F0] text-[#1A5344]'
             }`}>
-              17 Samhitas
+              17
             </span>
           </button>
+
+          <Link
+            to="/test-series"
+            className="flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 text-stone-700 hover:bg-[#FAF9F5] border border-stone-200/60 hover:border-amber-400 bg-amber-50/40"
+          >
+            <i className="fa-solid fa-trophy text-base text-amber-600"></i>
+            <span>Test Series</span>
+            <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-200/70 text-amber-900">
+              362 Tests
+            </span>
+          </Link>
         </div>
 
         <Link

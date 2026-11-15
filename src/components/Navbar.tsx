@@ -17,6 +17,7 @@ export const Navbar: React.FC = () => {
   }, [location.pathname]);
 
   const navLinks = [
+    { to: '/test-series', label: 'Test Series (362)', icon: 'fa-trophy' },
     { to: '/?tab=subjectwise', label: 'Subjectwise (38)', icon: 'fa-graduation-cap' },
     { to: '/?tab=samhitawise', label: 'Samhitawise (17)', icon: 'fa-book-bookmark' },
     { to: '/coverage', label: 'Audit & Reconciliation', icon: 'fa-chart-pie' },

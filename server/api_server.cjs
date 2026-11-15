@@ -61,6 +61,44 @@ try {
   console.error('[API Server] Error opening Sessions DB:', e.message);
 }
 
+const DB_PATH_TESTSERIES = resolveDbPath('testseries_fresh.sqlite');
+let testseriesDb;
+
+try {
+  testseriesDb = new DatabaseSync(DB_PATH_TESTSERIES);
+  console.log('[API Server] Connected to Phase 4 Test Series DB (7 Series, 362 Tests):', DB_PATH_TESTSERIES);
+} catch (e) {
+  console.error('[API Server] Error opening Test Series DB:', e.message);
+}
+
+if (sessionsDb) {
+  try {
+    sessionsDb.exec(`
+      CREATE TABLE IF NOT EXISTS testseries_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        test_id TEXT NOT NULL,
+        series_id TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        submitted_at TEXT,
+        time_spent_seconds INTEGER DEFAULT 0,
+        status TEXT DEFAULT 'in_progress',
+        answers_json TEXT DEFAULT '{}',
+        marked_for_review_json TEXT DEFAULT '[]',
+        total_questions INTEGER DEFAULT 0,
+        correct_count INTEGER DEFAULT 0,
+        incorrect_count INTEGER DEFAULT 0,
+        unattempted_count INTEGER DEFAULT 0,
+        score REAL DEFAULT 0,
+        total_marks REAL DEFAULT 0,
+        accuracy REAL DEFAULT 0
+      );
+    `);
+  } catch (e) {
+    console.error('[API Server] Error initializing testseries_attempts table:', e.message);
+  }
+}
+
+
 function isSubjectwise(nodeId) {
   if (!nodeId) return false;
   return nodeId.startsWith('SUB-') || nodeId.startsWith('SUBQ-');
@@ -1199,6 +1237,461 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, enriched);
     } catch (e) {
       console.error('[API /api/history Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+
+  // -------------------------------------------------------------------
+  // PHASE 4: TEST SERIES ROUTES (/api/test-series/*)
+  // -------------------------------------------------------------------
+
+  // GET /api/test-series/sessions
+  if (pathname === '/api/test-series/sessions' && req.method === 'GET') {
+    try {
+      const rows = testseriesDb.prepare(`
+        SELECT s.session,
+               COUNT(DISTINCT s.local_series_id) as series_count,
+               COUNT(DISTINCT t.local_test_id) as total_tests,
+               COUNT(DISTINCT CASE WHEN t.availability_status = 'available' THEN t.local_test_id END) as available_tests,
+               COUNT(DISTINCT CASE WHEN t.availability_status = 'scheduled' THEN t.local_test_id END) as scheduled_tests,
+               COUNT(q.local_question_id) as total_questions
+        FROM test_series s
+        LEFT JOIN series_tests t ON s.local_series_id = t.local_series_id
+        LEFT JOIN test_questions q ON t.local_test_id = q.local_test_id
+        GROUP BY s.session
+        ORDER BY s.session DESC
+      `).all();
+      return sendJSON(res, rows);
+    } catch (e) {
+      console.error('[API /api/test-series/sessions Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // GET /api/test-series - List all series, optional ?session=2026-2027
+  if (pathname === '/api/test-series' && req.method === 'GET') {
+    try {
+      const sessionFilter = params.get('session');
+      let query = `
+        SELECT s.local_series_id, s.session, s.title_source_exact, s.expected_test_count,
+               s.start_date_iso, s.end_date_iso, s.students_enrolled_source,
+               s.access_badge_source, s.exam_button_label_source, s.action_button_label_source,
+               COUNT(DISTINCT t.local_test_id) as verified_test_count,
+               COUNT(DISTINCT CASE WHEN t.availability_status = 'available' THEN t.local_test_id END) as available_test_count,
+               COUNT(DISTINCT CASE WHEN t.availability_status = 'scheduled' THEN t.local_test_id END) as scheduled_test_count,
+               COUNT(q.local_question_id) as questions_count
+        FROM test_series s
+        LEFT JOIN series_tests t ON s.local_series_id = t.local_series_id
+        LEFT JOIN test_questions q ON t.local_test_id = q.local_test_id
+      `;
+      const queryParams = [];
+      if (sessionFilter) {
+        query += ` WHERE s.session = ? `;
+        queryParams.push(sessionFilter);
+      }
+      query += ` GROUP BY s.local_series_id ORDER BY s.session DESC, s.local_series_id ASC `;
+      
+      const rows = testseriesDb.prepare(query).all(...queryParams);
+      return sendJSON(res, rows);
+    } catch (e) {
+      console.error('[API /api/test-series Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // GET /api/test-series/audit
+  if (pathname === '/api/test-series/audit' && req.method === 'GET') {
+    try {
+      const rows = testseriesDb.prepare(`
+        SELECT s.local_series_id, s.session, s.title_source_exact, s.expected_test_count,
+               COUNT(DISTINCT t.local_test_id) as discovered,
+               COUNT(DISTINCT CASE WHEN t.validation_status='verified' THEN t.local_test_id END) as verified,
+               COUNT(DISTINCT CASE WHEN t.validation_status='quarantined' THEN t.local_test_id END) as quarantined,
+               COUNT(DISTINCT CASE WHEN t.availability_status='available' THEN t.local_test_id END) as available,
+               COUNT(DISTINCT CASE WHEN t.availability_status='scheduled' THEN t.local_test_id END) as scheduled,
+               COUNT(q.local_question_id) as question_count
+        FROM test_series s
+        LEFT JOIN series_tests t ON s.local_series_id = t.local_series_id
+        LEFT JOIN test_questions q ON t.local_test_id = q.local_test_id
+        GROUP BY s.local_series_id
+        ORDER BY s.session DESC, s.local_series_id ASC
+      `).all();
+
+      const totalExpected = rows.reduce((acc, r) => acc + r.expected_test_count, 0);
+      const totalVerified = rows.reduce((acc, r) => acc + (r.verified || 0), 0);
+      const totalQuestions = rows.reduce((acc, r) => acc + (r.question_count || 0), 0);
+
+      return sendJSON(res, {
+        series: rows,
+        expected_test_assignments: totalExpected,
+        verified_test_assignments: totalVerified,
+        verified_question_records: totalQuestions,
+        all_test_counts_match: totalExpected === 362 && totalVerified === 362
+      });
+    } catch (e) {
+      console.error('[API /api/test-series/audit Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // GET /api/test-series/:seriesId (e.g. /api/test-series/TS-2026-27-01)
+  const seriesMatch = pathname.match(/^\/api\/test-series\/([A-Za-z0-9_-]+)$/);
+  if (seriesMatch && req.method === 'GET') {
+    const seriesId = seriesMatch[1];
+    try {
+      const series = testseriesDb.prepare(`
+        SELECT s.*, 
+               COUNT(DISTINCT t.local_test_id) as verified_test_count,
+               SUM(CASE WHEN t.availability_status = 'available' THEN 1 ELSE 0 END) as available_test_count,
+               SUM(CASE WHEN t.availability_status = 'scheduled' THEN 1 ELSE 0 END) as scheduled_test_count
+        FROM test_series s
+        LEFT JOIN series_tests t ON s.local_series_id = t.local_series_id
+        WHERE s.local_series_id = ?
+        GROUP BY s.local_series_id
+      `).get(seriesId);
+
+      if (!series) {
+        return sendJSON(res, { error: 'Test series not found' }, 404);
+      }
+
+      const tests = testseriesDb.prepare(`
+        SELECT t.local_test_id, t.source_test_id, t.title_source_exact, t.source_order,
+               t.scheduled_at_source, t.duration_minutes, t.source_question_count,
+               t.marks_per_correct, t.marks_per_incorrect, t.availability_status,
+               t.validation_status,
+               COUNT(q.local_question_id) as questions_count
+        FROM series_tests t
+        LEFT JOIN test_questions q ON t.local_test_id = q.local_test_id
+        WHERE t.local_series_id = ?
+        GROUP BY t.local_test_id
+        ORDER BY t.source_order ASC
+      `).all(seriesId);
+
+      return sendJSON(res, {
+        series,
+        tests
+      });
+    } catch (e) {
+      console.error('[API /api/test-series/:id Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // GET /api/test-series/tests/:testId (e.g. /api/test-series/tests/TS-2026-27-01-T01)
+  const testDetailMatch = pathname.match(/^\/api\/test-series\/tests\/([A-Za-z0-9_-]+)$/);
+  if (testDetailMatch && req.method === 'GET') {
+    const testId = testDetailMatch[1];
+    try {
+      const test = testseriesDb.prepare(`
+        SELECT t.*,
+               COUNT(q.local_question_id) as questions_count
+        FROM series_tests t
+        LEFT JOIN test_questions q ON t.local_test_id = q.local_test_id
+        WHERE t.local_test_id = ?
+        GROUP BY t.local_test_id
+      `).get(testId);
+
+      if (!test) {
+        return sendJSON(res, { error: 'Test not found' }, 404);
+      }
+
+      const series = testseriesDb.prepare(`
+        SELECT * FROM test_series WHERE local_series_id = ?
+      `).get(test.local_series_id);
+
+      return sendJSON(res, { test, series });
+    } catch (e) {
+      console.error('[API /api/test-series/tests/:id Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // GET /api/test-series/tests/:testId/questions - Test questions for examination (Answers masked)
+  const testQuestionsMatch = pathname.match(/^\/api\/test-series\/tests\/([A-Za-z0-9_-]+)\/questions$/);
+  if (testQuestionsMatch && req.method === 'GET') {
+    const testId = testQuestionsMatch[1];
+    try {
+      const test = testseriesDb.prepare(`SELECT * FROM series_tests WHERE local_test_id = ?`).get(testId);
+      if (!test) {
+        return sendJSON(res, { error: 'Test not found' }, 404);
+      }
+
+      if (test.availability_status !== 'available') {
+        return sendJSON(res, { error: 'This test is scheduled for future release and questions are not yet available', scheduled_at: test.scheduled_at_source }, 403);
+      }
+
+      const questions = testseriesDb.prepare(`
+        SELECT local_question_id, source_question_id, question_position,
+               question_text_source_exact, original_language
+        FROM test_questions
+        WHERE local_test_id = ?
+        ORDER BY question_position ASC
+      `).all(testId);
+
+      if (!questions.length) {
+        return sendJSON(res, { error: 'No questions found for this test' }, 404);
+      }
+
+      const optionsStmt = testseriesDb.prepare(`
+        SELECT position, option_text_source_exact
+        FROM test_options
+        WHERE local_question_id = ?
+        ORDER BY position ASC
+      `);
+
+      const questionsWithOptions = questions.map(q => ({
+        local_question_id: q.local_question_id,
+        question_position: q.question_position,
+        question_text: q.question_text_source_exact,
+        original_language: q.original_language,
+        options: optionsStmt.all(q.local_question_id).map(o => ({
+          position: o.position,
+          option_text: o.option_text_source_exact
+        }))
+      }));
+
+      return sendJSON(res, {
+        test: {
+          local_test_id: test.local_test_id,
+          title_source_exact: test.title_source_exact,
+          duration_minutes: test.duration_minutes || 120,
+          marks_per_correct: test.marks_per_correct || 4.0,
+          marks_per_incorrect: test.marks_per_incorrect || 1.0,
+          total_questions: questionsWithOptions.length
+        },
+        questions: questionsWithOptions
+      });
+    } catch (e) {
+      console.error('[API /api/test-series/tests/:id/questions Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // POST /api/test-series/attempts - Start exam attempt
+  if (pathname === '/api/test-series/attempts' && req.method === 'POST') {
+    try {
+      const body = await parseBody(req);
+      const { test_id } = body;
+      if (!test_id) {
+        return sendJSON(res, { error: 'test_id is required' }, 400);
+      }
+
+      const test = testseriesDb.prepare(`SELECT * FROM series_tests WHERE local_test_id = ?`).get(test_id);
+      if (!test) {
+        return sendJSON(res, { error: 'Test not found' }, 404);
+      }
+
+      const attempt_id = 'TS-ATT-' + crypto.randomUUID();
+      const started_at = new Date().toISOString();
+      const qCount = testseriesDb.prepare(`SELECT COUNT(*) as cnt FROM test_questions WHERE local_test_id = ?`).get(test_id).cnt;
+
+      sessionsDb.prepare(`
+        INSERT INTO testseries_attempts
+        (attempt_id, test_id, series_id, started_at, total_questions, total_marks)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).run(attempt_id, test_id, test.local_series_id, started_at, qCount, qCount * (test.marks_per_correct || 4.0));
+
+      return sendJSON(res, {
+        attempt_id,
+        test_id,
+        series_id: test.local_series_id,
+        started_at,
+        duration_minutes: test.duration_minutes || 120,
+        total_questions: qCount
+      });
+    } catch (e) {
+      console.error('[API POST /api/test-series/attempts Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // POST /api/test-series/attempts/:attemptId/save - Save answers in progress
+  const saveAttemptMatch = pathname.match(/^\/api\/test-series\/attempts\/([A-Za-z0-9_-]+)\/save$/);
+  if (saveAttemptMatch && req.method === 'POST') {
+    const attemptId = saveAttemptMatch[1];
+    try {
+      const body = await parseBody(req);
+      const { answers = {}, marked_for_review = [], time_spent_seconds = 0 } = body;
+
+      sessionsDb.prepare(`
+        UPDATE testseries_attempts
+        SET answers_json = ?, marked_for_review_json = ?, time_spent_seconds = ?
+        WHERE attempt_id = ?
+      `).run(JSON.stringify(answers), JSON.stringify(marked_for_review), time_spent_seconds, attemptId);
+
+      return sendJSON(res, { success: true });
+    } catch (e) {
+      console.error('[API POST /api/test-series/attempts/:id/save Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // POST /api/test-series/attempts/:attemptId/submit - Submit exam and calculate authentic score
+  const submitAttemptMatch = pathname.match(/^\/api\/test-series\/attempts\/([A-Za-z0-9_-]+)\/submit$/);
+  if (submitAttemptMatch && req.method === 'POST') {
+    const attemptId = submitAttemptMatch[1];
+    try {
+      const body = await parseBody(req);
+      const { answers = {}, time_spent_seconds = 0 } = body;
+
+      const attempt = sessionsDb.prepare(`SELECT * FROM testseries_attempts WHERE attempt_id = ?`).get(attemptId);
+      if (!attempt) {
+        return sendJSON(res, { error: 'Attempt not found' }, 404);
+      }
+
+      const test = testseriesDb.prepare(`SELECT * FROM series_tests WHERE local_test_id = ?`).get(attempt.test_id);
+      const pm = test.marks_per_correct || 4.0;
+      const nm = test.marks_per_incorrect || 1.0;
+
+      const questions = testseriesDb.prepare(`
+        SELECT q.local_question_id, q.question_position,
+               opt.position as correct_position
+        FROM test_questions q
+        JOIN test_options opt ON q.local_question_id = opt.local_question_id
+        WHERE q.local_test_id = ? AND opt.is_correct_source = 1
+      `).all(attempt.test_id);
+
+      let correctCount = 0;
+      let incorrectCount = 0;
+      let unattemptedCount = 0;
+
+      for (const q of questions) {
+        const userChoice = answers[q.local_question_id];
+        if (userChoice === undefined || userChoice === null || userChoice === '') {
+          unattemptedCount++;
+        } else if (Number(userChoice) === Number(q.correct_position)) {
+          correctCount++;
+        } else {
+          incorrectCount++;
+        }
+      }
+
+      const totalScore = (correctCount * pm) - (incorrectCount * nm);
+      const totalMarks = questions.length * pm;
+      const accuracy = (correctCount + incorrectCount > 0)
+        ? Math.round((correctCount / (correctCount + incorrectCount)) * 100)
+        : 0;
+
+      const submittedAt = new Date().toISOString();
+
+      sessionsDb.prepare(`
+        UPDATE testseries_attempts
+        SET submitted_at = ?, time_spent_seconds = ?, status = 'completed',
+            answers_json = ?, correct_count = ?, incorrect_count = ?,
+            unattempted_count = ?, score = ?, accuracy = ?
+        WHERE attempt_id = ?
+      `).run(
+        submittedAt, time_spent_seconds, JSON.stringify(answers),
+        correctCount, incorrectCount, unattemptedCount, totalScore, accuracy,
+        attemptId
+      );
+
+      return sendJSON(res, {
+        attempt_id: attemptId,
+        test_id: attempt.test_id,
+        status: 'completed',
+        submitted_at: submittedAt,
+        time_spent_seconds,
+        total_questions: questions.length,
+        correct_count: correctCount,
+        incorrect_count: incorrectCount,
+        unattempted_count: unattemptedCount,
+        score: totalScore,
+        total_marks: totalMarks,
+        accuracy_percent: accuracy
+      });
+    } catch (e) {
+      console.error('[API POST /api/test-series/attempts/:id/submit Error]', e);
+      return sendJSON(res, { error: e.message }, 500);
+    }
+  }
+
+  // GET /api/test-series/attempts/:attemptId/result - Full exam review with authentic citations & answer keys
+  const resultAttemptMatch = pathname.match(/^\/api\/test-series\/attempts\/([A-Za-z0-9_-]+)\/result$/);
+  if (resultAttemptMatch && req.method === 'GET') {
+    const attemptId = resultAttemptMatch[1];
+    try {
+      const attempt = sessionsDb.prepare(`SELECT * FROM testseries_attempts WHERE attempt_id = ?`).get(attemptId);
+      if (!attempt) {
+        return sendJSON(res, { error: 'Attempt not found' }, 404);
+      }
+
+      const test = testseriesDb.prepare(`SELECT * FROM series_tests WHERE local_test_id = ?`).get(attempt.test_id);
+      const series = testseriesDb.prepare(`SELECT * FROM test_series WHERE local_series_id = ?`).get(test.local_series_id);
+
+      const userAnswers = JSON.parse(attempt.answers_json || '{}');
+
+      const questions = testseriesDb.prepare(`
+        SELECT local_question_id, question_position, question_text_source_exact,
+               explanation_source, answer_source_json, original_language
+        FROM test_questions
+        WHERE local_test_id = ?
+        ORDER BY question_position ASC
+      `).all(attempt.test_id);
+
+      const optionsStmt = testseriesDb.prepare(`
+        SELECT position, option_text_source_exact, is_correct_source
+        FROM test_options
+        WHERE local_question_id = ?
+        ORDER BY position ASC
+      `);
+
+      const reviewQuestions = questions.map(q => {
+        const opts = optionsStmt.all(q.local_question_id);
+        const correctOpt = opts.find(o => o.is_correct_source === 1);
+        const userChoice = userAnswers[q.local_question_id] !== undefined ? Number(userAnswers[q.local_question_id]) : null;
+        const isCorrect = userChoice !== null && correctOpt && userChoice === correctOpt.position;
+        const isAttempted = userChoice !== null;
+
+        let ansMeta = {};
+        try { ansMeta = JSON.parse(q.answer_source_json || '{}'); } catch(e) {}
+
+        return {
+          local_question_id: q.local_question_id,
+          question_position: q.question_position,
+          question_text: q.question_text_source_exact,
+          user_answer: userChoice,
+          correct_answer: correctOpt ? correctOpt.position : null,
+          is_correct: isCorrect,
+          is_attempted: isAttempted,
+          explanation: q.explanation_source || ansMeta.commentary || '',
+          reference: {
+            samhita: ansMeta.reference_samhita || '',
+            sthana: ansMeta.reference_sthana || '',
+            subject: ansMeta.reference_subject || ''
+          },
+          options: opts.map(o => ({
+            position: o.position,
+            option_text: o.option_text_source_exact,
+            is_correct: o.is_correct_source === 1
+          }))
+        };
+      });
+
+      return sendJSON(res, {
+        scorecard: {
+          attempt_id: attempt.attempt_id,
+          test_id: attempt.test_id,
+          test_title: test.title_source_exact,
+          series_title: series.title_source_exact,
+          session: series.session,
+          status: attempt.status,
+          started_at: attempt.started_at,
+          submitted_at: attempt.submitted_at,
+          time_spent_seconds: attempt.time_spent_seconds,
+          total_questions: attempt.total_questions,
+          correct_count: attempt.correct_count,
+          incorrect_count: attempt.incorrect_count,
+          unattempted_count: attempt.unattempted_count,
+          score: attempt.score,
+          total_marks: attempt.total_marks,
+          accuracy_percent: attempt.accuracy
+        },
+        questions: reviewQuestions
+      });
+    } catch (e) {
+      console.error('[API /api/test-series/attempts/:id/result Error]', e);
       return sendJSON(res, { error: e.message }, 500);
     }
   }
