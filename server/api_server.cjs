@@ -5,24 +5,39 @@ const crypto = require('crypto');
 
 const PORT = process.env.API_PORT || 5168;
 
-function resolveDbPath(filename) {
-  const localData = path.resolve(__dirname, '../data', filename);
-  const parentData = path.resolve(__dirname, '../../data', filename);
-  const dataDir = fs.existsSync(path.dirname(localData)) && fs.existsSync(path.resolve(__dirname, '../data'))
-    ? path.dirname(localData)
-    : path.dirname(parentData);
-  const target = path.join(dataDir, filename);
+const IS_VERCEL = Boolean(process.env.VERCEL);
 
-  // Auto-decompress if only .gz exists
-  if (!fs.existsSync(target) && fs.existsSync(target + '.gz')) {
-    console.log(`[API Server] Decompressing ${filename}.gz (GitHub-safe archive)...`);
-    const zlib = require('zlib');
-    const compressed = fs.readFileSync(target + '.gz');
-    const decompressed = zlib.gunzipSync(compressed);
-    fs.writeFileSync(target, decompressed);
-    console.log(`[API Server] Successfully unpacked ${filename} (${(decompressed.length / (1024*1024)).toFixed(1)} MB)!`);
+function resolveDbPath(filename) {
+  const fs = require('fs');
+  const os = require('os');
+  const source = path.resolve(__dirname, '../data', filename);
+  const archived = source + '.gz';
+  if (IS_VERCEL) {
+    if (filename === 'portal_sessions.sqlite') {
+      // Vercel deployments are read-only; temporary sessions are not durable.
+      const writable = path.join(os.tmpdir(), 'ayurvedsiddhi_portal_sessions.sqlite');
+      if (!fs.existsSync(writable)) {
+        if (!fs.existsSync(source)) throw new Error('Session database seed missing');
+        fs.copyFileSync(source, writable);
+      }
+      return writable;
+    }
+    if (fs.existsSync(source)) return source;
+    if (fs.existsSync(archived)) {
+      const writable = path.join(os.tmpdir(), filename);
+      if (!fs.existsSync(writable)) {
+        const zlib = require('zlib');
+        fs.writeFileSync(writable, zlib.gunzipSync(fs.readFileSync(archived)));
+      }
+      return writable;
+    }
+    throw new Error('Missing bundled SQLite file: ' + filename);
   }
-  return target;
+  if (!fs.existsSync(source) && fs.existsSync(archived)) {
+    const zlib = require('zlib');
+    fs.writeFileSync(source, zlib.gunzipSync(fs.readFileSync(archived)));
+  }
+  return source;
 }
 
 const fs = require('fs');
@@ -34,21 +49,21 @@ const DB_PATH_SESSIONS = resolveDbPath('portal_sessions.sqlite');
 let phase1Db, phase2Db, subjectwiseDb, sessionsDb;
 
 try {
-  phase1Db = new DatabaseSync(DB_PATH_PHASE1);
+  phase1Db = new DatabaseSync(DB_PATH_PHASE1, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 1 DB (Charaka, Sushruta, Ashtanga Hridaya):', DB_PATH_PHASE1);
 } catch (e) {
   console.error('[API Server] Error opening Phase 1 DB:', e.message);
 }
 
 try {
-  phase2Db = new DatabaseSync(DB_PATH_PHASE2);
+  phase2Db = new DatabaseSync(DB_PATH_PHASE2, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 2 DB (14 Categories):', DB_PATH_PHASE2);
 } catch (e) {
   console.error('[API Server] Error opening Phase 2 DB:', e.message);
 }
 
 try {
-  subjectwiseDb = new DatabaseSync(DB_PATH_SUBJECTWISE);
+  subjectwiseDb = new DatabaseSync(DB_PATH_SUBJECTWISE, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 3 Subjectwise DB (38 Subjects):', DB_PATH_SUBJECTWISE);
 } catch (e) {
   console.error('[API Server] Error opening Subjectwise DB:', e.message);
@@ -88,6 +103,7 @@ function parseUrl(reqUrl) {
 }
 
 function parseBody(req) {
+  if (req.body && typeof req.body === 'object') return Promise.resolve(req.body);
   return new Promise((resolve) => {
     if (req.readableEnded) {
       return resolve({});
@@ -1206,6 +1222,10 @@ const server = http.createServer(async (req, res) => {
   return sendJSON(res, { error: 'Route not found' }, 404);
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`[API Server] Running on http://127.0.0.1:${PORT}`);
-});
+if (require.main === module) {
+  server.listen(PORT, '127.0.0.1', () => {
+    console.log(`[API Server] Running on http://127.0.0.1:${PORT}`);
+  });
+} else {
+  module.exports = (req, res) => server.emit('request', req, res);
+}
