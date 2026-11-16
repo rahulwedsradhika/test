@@ -5,29 +5,34 @@ const crypto = require('crypto');
 
 const PORT = process.env.API_PORT || 5168;
 
+const IS_VERCEL = Boolean(process.env.VERCEL);
+
 function resolveDbPath(filename) {
-  const localData = path.resolve(__dirname, '../data', filename);
-  const parentData = path.resolve(__dirname, '../../data', filename);
-
-  let target = parentData;
-  if (fs.existsSync(parentData) && fs.statSync(parentData).size > 0) {
-    target = parentData;
-  } else if (fs.existsSync(localData) && fs.statSync(localData).size > 0) {
-    target = localData;
-  } else if (fs.existsSync(parentData)) {
-    target = parentData;
-  } else {
-    target = localData;
+  const fs = require('fs');
+  const os = require('os');
+  const zlib = require('zlib');
+  const bundled = path.resolve(__dirname, '../data', filename);
+  const parent = path.resolve(__dirname, '../../data', filename);
+  if (IS_VERCEL) {
+    // Vercel deployment filesystem is read-only, and SQLite may need to create WAL
+    // sidecars even while reading. All DB handles use per-instance writable /tmp.
+    // The question datasets are immutable release snapshots; attempts are NOT durable.
+    const tmp = path.join(os.tmpdir(), 'ayurvedsiddhi_' + filename);
+    if (!fs.existsSync(tmp) || fs.statSync(tmp).size === 0) {
+      const gz = bundled + '.gz';
+      if (fs.existsSync(gz)) {
+        fs.writeFileSync(tmp, zlib.gunzipSync(fs.readFileSync(gz)));
+      } else if (fs.existsSync(bundled)) {
+        fs.copyFileSync(bundled, tmp);
+      } else {
+        throw new Error('Vercel bundled SQLite archive missing: ' + gz);
+      }
+    }
+    return tmp;
   }
-
-  // Auto-decompress if only .gz exists
+  const target = fs.existsSync(parent) && fs.statSync(parent).size > 0 ? parent : bundled;
   if ((!fs.existsSync(target) || fs.statSync(target).size === 0) && fs.existsSync(target + '.gz')) {
-    console.log(`[API Server] Decompressing ${filename}.gz (GitHub-safe archive)...`);
-    const zlib = require('zlib');
-    const compressed = fs.readFileSync(target + '.gz');
-    const decompressed = zlib.gunzipSync(compressed);
-    fs.writeFileSync(target, decompressed);
-    console.log(`[API Server] Successfully unpacked ${filename} (${(decompressed.length / (1024*1024)).toFixed(1)} MB)!`);
+    fs.writeFileSync(target, zlib.gunzipSync(fs.readFileSync(target + '.gz')));
   }
   return target;
 }
@@ -41,21 +46,21 @@ const DB_PATH_SESSIONS = resolveDbPath('portal_sessions.sqlite');
 let phase1Db, phase2Db, subjectwiseDb, sessionsDb;
 
 try {
-  phase1Db = new DatabaseSync(DB_PATH_PHASE1);
+  phase1Db = new DatabaseSync(DB_PATH_PHASE1, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 1 DB (Charaka, Sushruta, Ashtanga Hridaya):', DB_PATH_PHASE1);
 } catch (e) {
   console.error('[API Server] Error opening Phase 1 DB:', e.message);
 }
 
 try {
-  phase2Db = new DatabaseSync(DB_PATH_PHASE2);
+  phase2Db = new DatabaseSync(DB_PATH_PHASE2, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 2 DB (14 Categories):', DB_PATH_PHASE2);
 } catch (e) {
   console.error('[API Server] Error opening Phase 2 DB:', e.message);
 }
 
 try {
-  subjectwiseDb = new DatabaseSync(DB_PATH_SUBJECTWISE);
+  subjectwiseDb = new DatabaseSync(DB_PATH_SUBJECTWISE, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 3 Subjectwise DB (38 Subjects):', DB_PATH_SUBJECTWISE);
 } catch (e) {
   console.error('[API Server] Error opening Subjectwise DB:', e.message);
@@ -72,7 +77,7 @@ const DB_PATH_TESTSERIES = resolveDbPath('testseries_fresh.sqlite');
 let testseriesDb;
 
 try {
-  testseriesDb = new DatabaseSync(DB_PATH_TESTSERIES);
+  testseriesDb = new DatabaseSync(DB_PATH_TESTSERIES, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 4 Test Series DB (7 Series, 362 Tests):', DB_PATH_TESTSERIES);
 } catch (e) {
   console.error('[API Server] Error opening Test Series DB:', e.message);
@@ -80,7 +85,7 @@ try {
 const DB_PATH_TAGWISE = resolveDbPath('tagwise_fresh.sqlite');
 let tagwiseDb;
 try {
-  tagwiseDb = new DatabaseSync(DB_PATH_TAGWISE);
+  tagwiseDb = new DatabaseSync(DB_PATH_TAGWISE, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 5 Tagwise DB (6 Categories, 9,632 Assignments):', DB_PATH_TAGWISE);
 } catch (e) {
   console.error('[API Server] Error opening Tagwise DB:', e.message);
@@ -90,7 +95,7 @@ const { handleTagwiseRoutes } = require('./tagwise_routes.cjs');
 const DB_PATH_PYP = resolveDbPath('previous_years_fresh.sqlite');
 let pypDb;
 try {
-  pypDb = new DatabaseSync(DB_PATH_PYP);
+  pypDb = new DatabaseSync(DB_PATH_PYP, { readOnly: IS_VERCEL });
   console.log('[API Server] Connected to Phase 6 Previous Year Papers DB (3 Groups, 127 Tests):', DB_PATH_PYP);
 } catch (e) {
   console.error('[API Server] Error opening Previous Year Papers DB:', e.message);
@@ -224,6 +229,7 @@ function parseUrl(reqUrl) {
 }
 
 function parseBody(req) {
+  if (req.body && typeof req.body === 'object') return Promise.resolve(req.body);
   return new Promise((resolve) => {
     if (req.readableEnded) {
       return resolve({});
@@ -1807,6 +1813,10 @@ const server = http.createServer(async (req, res) => {
   return sendJSON(res, { error: 'Route not found' }, 404);
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`[API Server] Running on http://127.0.0.1:${PORT}`);
-});
+if (require.main === module) {
+  server.listen(PORT, '127.0.0.1', () => {
+    console.log(`[API Server] Running on http://127.0.0.1:${PORT}`);
+  });
+} else {
+  module.exports = (req, res) => server.emit('request', req, res);
+}
