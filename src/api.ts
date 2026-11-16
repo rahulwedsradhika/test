@@ -1,6 +1,7 @@
 import {
   TagCategory, TagQuestion, TagwisePracticeSession, TagwiseScorecard, TagwiseReviewQuestion,
   PreviousYearGroup, PreviousYearTest, PYPExamQuestion, PYPScorecard, PYPReviewQuestion,
+  DailySession, DailyTestCatalogItem, DailyExamQuestion, DailyAttemptSummary, DailyReviewQuestion,
   SamhitaNode, SubjectNode, NodeDetail, PracticeSessionResponse, PracticeResult, CoverageReport
 } from './types';
 
@@ -449,3 +450,153 @@ export async function fetchPYPAudit(): Promise<any> {
   if (!res.ok) throw new Error('Failed to fetch PYP audit');
   return res.json();
 }
+
+// Phase 7: Daily Tests API Functions
+export async function fetchDailySessions(): Promise<{
+  success: boolean;
+  phase: number;
+  title: string;
+  total_sessions: number;
+  total_expected_listings: number;
+  total_catalogued_memberships: number;
+  total_ready_tests: number;
+  total_unique_tests: number;
+  total_unique_questions: number;
+  sessions: DailySession[];
+}> {
+  const res = await fetch(`${BASE_URL}/daily-tests/sessions`);
+  if (!res.ok) throw new Error('Failed to fetch daily test sessions');
+  return res.json();
+}
+
+export async function fetchDailySessionTests(
+  sessionId: string,
+  options?: { filter?: string; search?: string; limit?: number; offset?: number }
+): Promise<{
+  success: boolean;
+  session: {
+    local_session_id: string;
+    session_year: string;
+    expected_test_listings_owner: number;
+  };
+  filter: string;
+  total: number;
+  limit: number;
+  offset: number;
+  tests: DailyTestCatalogItem[];
+}> {
+  const params = new URLSearchParams();
+  if (options?.filter) params.append('filter', options.filter);
+  if (options?.search) params.append('search', options.search);
+  if (options?.limit) params.append('limit', options.limit.toString());
+  if (options?.offset) params.append('offset', options.offset.toString());
+
+  const res = await fetch(`${BASE_URL}/daily-tests/sessions/${encodeURIComponent(sessionId)}/tests?${params.toString()}`);
+  if (!res.ok) throw new Error(`Failed to fetch tests for session ${sessionId}`);
+  return res.json();
+}
+
+export async function fetchDailyTestDetails(testUid: string): Promise<{
+  success: boolean;
+  test: DailyTestCatalogItem & {
+    original_instructions?: string;
+    scoring_rules_source_json?: string;
+    last_attempt?: any;
+    sessions: { local_session_id: string; session_year: string; source_display_order: number }[];
+  };
+}> {
+  const res = await fetch(`${BASE_URL}/daily-tests/tests/${encodeURIComponent(testUid)}`);
+  if (!res.ok) throw new Error(`Failed to fetch test ${testUid}`);
+  return res.json();
+}
+
+export async function fetchDailyTestQuestions(testUid: string): Promise<{
+  success: boolean;
+  test_uid: string;
+  title: string;
+  subtitle: string | null;
+  duration_seconds: number;
+  total_questions: number;
+  declared_marks: number;
+  questions: DailyExamQuestion[];
+}> {
+  const res = await fetch(`${BASE_URL}/daily-tests/tests/${encodeURIComponent(testUid)}/questions`);
+  if (!res.ok) throw new Error(`Failed to fetch questions for test ${testUid}`);
+  return res.json();
+}
+
+export async function startDailyAttempt(data: {
+  test_uid: string;
+  session_id?: string;
+}): Promise<{
+  success: boolean;
+  attempt_id: string;
+  test_uid: string;
+  session_id: string;
+  started_at: string;
+  duration_seconds: number;
+}> {
+  const res = await fetch(`${BASE_URL}/daily-tests/attempts/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to start daily test attempt');
+  return res.json();
+}
+
+export async function saveDailyAttempt(
+  attemptId: string,
+  data: { answers: Record<string, number> }
+): Promise<{ success: boolean; saved_at: string }> {
+  const res = await fetch(`${BASE_URL}/daily-tests/attempts/${encodeURIComponent(attemptId)}/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to autosave daily attempt');
+  return res.json();
+}
+
+export async function submitDailyAttempt(
+  attemptId: string,
+  data: { answers: Record<string, number> }
+): Promise<{
+  success: boolean;
+  attempt_id: string;
+  test_uid: string;
+  score: number;
+  max_marks: number;
+  total_questions: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  percentage: number;
+  accuracy: number;
+  completed_at: string;
+}> {
+  const res = await fetch(`${BASE_URL}/daily-tests/attempts/${encodeURIComponent(attemptId)}/submit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to submit daily test');
+  return res.json();
+}
+
+export async function fetchDailyAttemptResults(attemptId: string): Promise<{
+  success: boolean;
+  attempt: DailyAttemptSummary;
+  questions: DailyReviewQuestion[];
+}> {
+  const res = await fetch(`${BASE_URL}/daily-tests/attempts/${encodeURIComponent(attemptId)}/results`);
+  if (!res.ok) throw new Error('Failed to fetch daily test results');
+  return res.json();
+}
+
+export async function fetchDailyAudit(): Promise<any> {
+  const res = await fetch(`${BASE_URL}/daily-tests/audit`);
+  if (!res.ok) throw new Error('Failed to fetch daily test audit');
+  return res.json();
+}
+

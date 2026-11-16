@@ -1,0 +1,107 @@
+{
+  "schema_id": "ayurvedsiddhi.dailytests.phase7.mapping.v1",
+  "project": "AyurvedSiddhi Test Portal",
+  "module": "Daily Tests",
+  "mapping_status": "screenshot_and_owner_expectations_only",
+  "homepage_route_hint_user_provided": "/quiz.php",
+  "homepage_route_verified": false,
+  "expected_total_session_test_listings": 750,
+  "expected_total_is_distinct_tests": false,
+  "explanation_expected_total": "250 expected listings for each of 3 sessions were supplied by owner. Distinct native source tests must be checked; never infer 750 unique records.",
+  "sessions": [
+    {
+      "local_session_id": "DLY-2026-2027",
+      "display_order": 1,
+      "session_year": "2026-2027",
+      "expected_test_listings": 250,
+      "expected_count_source": "user_provided",
+      "route_hint_user_provided": "/quiz.php?year=2026-2027",
+      "route_verified": false,
+      "native_session_id": null,
+      "ingestion_status": "mapping_only"
+    },
+    {
+      "local_session_id": "DLY-2025-2026",
+      "display_order": 2,
+      "session_year": "2025-2026",
+      "expected_test_listings": 250,
+      "expected_count_source": "user_provided",
+      "route_hint_user_provided": "/quiz.php?year=2025-2026",
+      "route_verified": false,
+      "native_session_id": null,
+      "ingestion_status": "mapping_only"
+    },
+    {
+      "local_session_id": "DLY-2024-2025",
+      "display_order": 3,
+      "session_year": "2024-2025",
+      "expected_test_listings": 250,
+      "expected_count_source": "user_provided",
+      "route_hint_user_provided": "/quiz.php?year=2024-2025",
+      "route_verified": false,
+      "native_session_id": null,
+      "ingestion_status": "mapping_only"
+    }
+  ],
+  "ui_filters_screenshot_exact": [
+    "All",
+    "Solved",
+    "Un Solved"
+  ],
+  "ui_filter_meaning_note": "Solved/Un Solved must be computed per authenticated student using durable attempt data; original screenshot does not establish API fields.",
+  "example_test_screenshot_evidence": {
+    "evidence_only_not_seeded": true,
+    "observed_badge_text": "249",
+    "badge_meaning": "unknown - DO NOT presume source ID, sequence, or test count",
+    "displayed_date": "02 Jul 2024",
+    "original_title": "Charaka Sushruta Sutra Test-2",
+    "original_subtitle": "Charaka Samhita Sutra Sthana Chapter - 2,3, Sushruta Samhita Sutra Sthana Chapter - 3,4,5",
+    "total_marks": 200,
+    "mcq_count": 50,
+    "duration_minutes": 45,
+    "buttons_visible": [
+      "Solve Test",
+      "First Solve Test"
+    ],
+    "example_session_year": "unverified",
+    "metadata_provenance": "second uploaded screenshot",
+    "not_api_verified": true
+  },
+  "source_evidence": [
+    {
+      "file": "source_screenshots/01_daily_tests_sessions.png",
+      "fields_visible": [
+        "DAILY TESTS",
+        "2026-2027",
+        "2025-2026",
+        "2024-2025",
+        "All",
+        "Solved",
+        "Un Solved"
+      ]
+    },
+    {
+      "file": "source_screenshots/02_daily_test_detail_example.png",
+      "fields_visible": [
+        "249",
+        "02 Jul 2024",
+        "Charaka Sushruta Sutra Test-2",
+        "subtitle",
+        "Marks 200",
+        "MCQ 50",
+        "Time 45 min",
+        "Solve Test",
+        "First Solve Test"
+      ]
+    }
+  ],
+  "rules": [
+    "No previous database content",
+    "Fresh authorized API requests only",
+    "Never invent source-native IDs, tests or questions",
+    "Preserve exact titles and subtitles",
+    "Independent DB",
+    "Per-session count reconciliation",
+    "Do not change main or promote production"
+  ]
+}

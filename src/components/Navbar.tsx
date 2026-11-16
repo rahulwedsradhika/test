@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { fetchCoverage, fetchTags, fetchPreviousYearGroups } from '../api';
+import { fetchCoverage, fetchTags, fetchPreviousYearGroups, fetchDailySessions } from '../api';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -11,8 +11,9 @@ export const Navbar: React.FC = () => {
     Promise.all([
       fetchCoverage().catch(() => null),
       fetchTags().catch(() => null),
-      fetchPreviousYearGroups().catch(() => null)
-    ]).then(([cov, tagRes, pypRes]) => {
+      fetchPreviousYearGroups().catch(() => null),
+      fetchDailySessions().catch(() => null)
+    ]).then(([cov, tagRes, pypRes, dailyRes]) => {
       let count = 0;
       if (cov) {
         count += (cov.total_validated_questions || 0) + (cov.subjectwise_total || 0);
@@ -27,9 +28,14 @@ export const Navbar: React.FC = () => {
       } else {
         count += 14040;
       }
-      setTotalQuestions(count > 0 ? count : 175542);
+      if (dailyRes && dailyRes.total_unique_questions) {
+        count += (dailyRes.total_unique_questions || 12350);
+      } else {
+        count += 12350;
+      }
+      setTotalQuestions(count > 0 ? count : 187852);
     }).catch(() => {
-      setTotalQuestions(175542);
+      setTotalQuestions(187852);
     });
   }, [location.pathname]);
 
@@ -39,6 +45,7 @@ export const Navbar: React.FC = () => {
     { to: '/test-series', label: 'Test Series', count: '362', icon: 'fa-trophy' },
     { to: '/tagwise', label: 'Tagwise', count: '6 Tags', icon: 'fa-tags' },
     { to: '/previous-years', label: 'Previous Years', count: '127', icon: 'fa-calendar-days' },
+    { to: '/daily-tests', label: 'Daily Tests', count: '3 Sess', icon: 'fa-sun' },
     { to: '/coverage', label: 'Audit & Ledger', count: '', icon: 'fa-chart-pie' },
     { to: '/bookmarks', label: 'Bookmarks', count: '', icon: 'fa-bookmark' },
   ];
@@ -70,6 +77,7 @@ export const Navbar: React.FC = () => {
                 (link.to.includes('?') && location.pathname + location.search === link.to) ||
                 (link.to === '/tagwise' && location.pathname.startsWith('/tagwise')) ||
                 (link.to === '/previous-years' && location.pathname.startsWith('/previous-years')) ||
+                (link.to === '/daily-tests' && location.pathname.startsWith('/daily-tests')) ||
                 (link.to === '/test-series' && location.pathname.startsWith('/test-series'));
 
               return (
@@ -125,6 +133,7 @@ export const Navbar: React.FC = () => {
               (link.to.includes('?') && location.pathname + location.search === link.to) ||
               (link.to === '/tagwise' && location.pathname.startsWith('/tagwise')) ||
               (link.to === '/previous-years' && location.pathname.startsWith('/previous-years')) ||
+              (link.to === '/daily-tests' && location.pathname.startsWith('/daily-tests')) ||
               (link.to === '/test-series' && location.pathname.startsWith('/test-series'));
 
             return (

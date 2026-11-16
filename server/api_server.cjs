@@ -8,13 +8,20 @@ const PORT = process.env.API_PORT || 5168;
 function resolveDbPath(filename) {
   const localData = path.resolve(__dirname, '../data', filename);
   const parentData = path.resolve(__dirname, '../../data', filename);
-  const dataDir = fs.existsSync(path.dirname(localData)) && fs.existsSync(path.resolve(__dirname, '../data'))
-    ? path.dirname(localData)
-    : path.dirname(parentData);
-  const target = path.join(dataDir, filename);
+
+  let target = parentData;
+  if (fs.existsSync(parentData) && fs.statSync(parentData).size > 0) {
+    target = parentData;
+  } else if (fs.existsSync(localData) && fs.statSync(localData).size > 0) {
+    target = localData;
+  } else if (fs.existsSync(parentData)) {
+    target = parentData;
+  } else {
+    target = localData;
+  }
 
   // Auto-decompress if only .gz exists
-  if (!fs.existsSync(target) && fs.existsSync(target + '.gz')) {
+  if ((!fs.existsSync(target) || fs.statSync(target).size === 0) && fs.existsSync(target + '.gz')) {
     console.log(`[API Server] Decompressing ${filename}.gz (GitHub-safe archive)...`);
     const zlib = require('zlib');
     const compressed = fs.readFileSync(target + '.gz');
@@ -90,6 +97,16 @@ try {
 }
 const { handlePreviousYearsRoutes } = require('./previous_years_routes.cjs');
 
+const DB_PATH_DAILY = resolveDbPath('daily_tests_fresh.sqlite');
+let dailyDb;
+try {
+  dailyDb = new DatabaseSync(DB_PATH_DAILY);
+  console.log('[API Server] Connected to Phase 7 Daily Tests DB (3 Sessions, 90 Tests):', DB_PATH_DAILY);
+} catch (e) {
+  console.error('[API Server] Error opening Daily Tests DB:', e.message);
+}
+const { handleDailyTestsRoutes } = require('./daily_tests_routes.cjs');
+
 if (sessionsDb) {
   try {
     sessionsDb.exec(`
@@ -147,6 +164,22 @@ CREATE TABLE IF NOT EXISTS tagwise_attempts (
         started_at TEXT,
         completed_at TEXT
       );
+      CREATE TABLE IF NOT EXISTS daily_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        test_uid TEXT NOT NULL,
+        session_id TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        saved_at TEXT,
+        completed_at TEXT,
+        answers_json TEXT NOT NULL DEFAULT '{}',
+        score REAL,
+        total_questions INTEGER,
+        correct_count INTEGER,
+        incorrect_count INTEGER,
+        unattempted_count INTEGER,
+        is_completed INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_daily_attempts_test ON daily_attempts(test_uid, is_completed);
     `);
   } catch (e) {
     console.error('[API Server] Error initializing testseries_attempts table:', e.message);
@@ -1758,6 +1791,11 @@ const server = http.createServer(async (req, res) => {
 
   // Phase 6: Previous Year Papers Routes
   if (await handlePreviousYearsRoutes(req, res, pathname, req.method, params, pypDb, sessionsDb, sendJSON, parseBody)) {
+    return;
+  }
+
+  // Phase 7: Daily Tests Routes
+  if (await handleDailyTestsRoutes(req, res, pathname, req.method, params, dailyDb, sessionsDb, sendJSON, parseBody)) {
     return;
   }
 

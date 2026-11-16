@@ -408,3 +408,90 @@ export interface PYPReviewQuestion {
   is_attempted: boolean;
   explanation: string;
 }
+
+// Phase 7: Daily Tests Types
+export interface DailySession {
+  local_session_id: string;
+  display_order: number;
+  session_year: string;
+  expected_test_listings_owner: number;
+  expected_count_origin: string;
+  original_route_hint: string;
+  route_verified: number;
+  native_session_id: string | null;
+  source_advertised_test_count: number | null;
+  ingestion_status: string;
+  verified_catalog_memberships: number;
+  ready_tests: number;
+  restricted_tests: number;
+  difference_from_owner_expected: number;
+}
+
+export interface DailyTestCatalogItem {
+  test_uid: string;
+  source_namespace: string;
+  native_test_id: string;
+  original_title: string;
+  original_subtitle: string | null;
+  original_description: string | null;
+  source_date_text: string | null;
+  source_badge_text: string | null;
+  source_display_order: number | null;
+  declared_mcq_count: number | null;
+  declared_marks: number | null;
+  duration_seconds: number | null;
+  access_state: 'authorized' | 'restricted' | 'unavailable' | string;
+  validation_state: 'questions_verified' | 'catalog_verified' | string;
+  session_position: number;
+  actual_question_count: number;
+  is_ready: boolean;
+  student_solved: boolean;
+}
+
+export interface DailyExamQuestion {
+  question_uid: string;
+  position: number;
+  stem: string;
+  question_type: string | null;
+  marks: number | null;
+  options: {
+    option_uid: string;
+    position: number;
+    text: string;
+  }[];
+}
+
+export interface DailyAttemptSummary {
+  attempt_id: string;
+  test_uid: string;
+  test_title: string;
+  test_subtitle: string | null;
+  started_at: string;
+  completed_at: string;
+  score: number;
+  max_marks: number;
+  total_questions: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  percentage: number;
+  accuracy: number;
+}
+
+export interface DailyReviewQuestion {
+  question_uid: string;
+  position: number;
+  stem: string;
+  question_type: string | null;
+  marks: number | null;
+  options: {
+    option_uid: string;
+    position: number;
+    text: string;
+  }[];
+  student_selected_position: number | null;
+  correct_answer_position: number | null;
+  explanation: string | null;
+  status: 'correct' | 'incorrect' | 'unattempted';
+}
+
