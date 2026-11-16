@@ -12,3 +12,4 @@ data/phase2_fresh_questions.sqlite-wal
 data/phase2_fresh_questions.sqlite-shm
 data/*.backup.sqlite
 data/*.pre_phase3.sqlite
+server/*.sqlite

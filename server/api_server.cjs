@@ -97,26 +97,6 @@ try {
 }
 const { handlePreviousYearsRoutes } = require('./previous_years_routes.cjs');
 
-const DB_PATH_DAILY = resolveDbPath('daily_tests_fresh.sqlite');
-let dailyDb;
-try {
-  dailyDb = new DatabaseSync(DB_PATH_DAILY);
-  console.log('[API Server] Connected to Phase 7 Daily Tests DB (3 Sessions, 90 Tests):', DB_PATH_DAILY);
-} catch (e) {
-  console.error('[API Server] Error opening Daily Tests DB:', e.message);
-}
-const { handleDailyTestsRoutes } = require('./daily_tests_routes.cjs');
-
-const DB_PATH_MOCK = resolveDbPath('mock_tests_fresh.sqlite');
-let mockDb;
-try {
-  mockDb = new DatabaseSync(DB_PATH_MOCK);
-  console.log('[API Server] Connected to Phase 8 Mock Tests DB (4 Years, 398 Tests):', DB_PATH_MOCK);
-} catch (e) {
-  console.error('[API Server] Error opening Mock Tests DB:', e.message);
-}
-const { handleMockTestsRoutes } = require('./mock_tests_routes.cjs');
-
 if (sessionsDb) {
   try {
     sessionsDb.exec(`
@@ -1821,16 +1801,6 @@ const server = http.createServer(async (req, res) => {
 
   // Phase 6: Previous Year Papers Routes
   if (await handlePreviousYearsRoutes(req, res, pathname, req.method, params, pypDb, sessionsDb, sendJSON, parseBody)) {
-    return;
-  }
-
-  // Phase 7: Daily Tests Routes
-  if (await handleDailyTestsRoutes(req, res, pathname, req.method, params, dailyDb, sessionsDb, sendJSON, parseBody)) {
-    return;
-  }
-
-  // Phase 8: Mock Tests Routes
-  if (await handleMockTestsRoutes(req, res, pathname, req.method, params, mockDb, sessionsDb, sendJSON, parseBody)) {
     return;
   }
 

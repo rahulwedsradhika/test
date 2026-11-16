@@ -23,12 +23,6 @@ import { PreviousYearsHomePage } from './pages/PreviousYearsHomePage';
 import { PreviousYearsTestListPage } from './pages/PreviousYearsTestListPage';
 import { PreviousYearsExamScreen } from './pages/PreviousYearsExamScreen';
 import { PreviousYearsResultScreen } from './pages/PreviousYearsResultScreen';
-import { DailyTestsHomePage } from './pages/DailyTestsHomePage';
-import { DailyTestExamScreen } from './pages/DailyTestExamScreen';
-import { DailyTestResultScreen } from './pages/DailyTestResultScreen';
-import { MockTestsHomePage } from './pages/MockTestsHomePage';
-import { MockTestExamScreen } from './pages/MockTestExamScreen';
-import { MockTestResultScreen } from './pages/MockTestResultScreen';
 
 export default function App() {
   const location = useLocation();
@@ -36,8 +30,6 @@ export default function App() {
     location.pathname.startsWith('/practice/') ||
     location.pathname.startsWith('/test-series/exam/') ||
     location.pathname.startsWith('/tagwise/practice/') ||
-    location.pathname.startsWith('/daily-tests/exam/') ||
-    location.pathname.startsWith('/mock-tests/exam/') ||
     (location.pathname.startsWith('/previous-years/tests/') && location.pathname.endsWith('/exam'));
 
   return (
@@ -77,18 +69,6 @@ export default function App() {
           <Route path="/previous-years/:groupId" element={<PreviousYearsTestListPage />} />
           <Route path="/previous-years/tests/:testId/exam" element={<PreviousYearsExamScreen />} />
           <Route path="/previous-years/attempts/:attemptId/results" element={<PreviousYearsResultScreen />} />
-
-          {/* Phase 7: Daily Tests Routes */}
-          <Route path="/daily-tests" element={<DailyTestsHomePage />} />
-          <Route path="/daily-tests/sessions/:sessionId" element={<DailyTestsHomePage />} />
-          <Route path="/daily-tests/exam/:testUid" element={<DailyTestExamScreen />} />
-          <Route path="/daily-tests/results/:attemptId" element={<DailyTestResultScreen />} />
-
-          {/* Phase 8: Mock Tests Routes */}
-          <Route path="/mock-tests" element={<MockTestsHomePage />} />
-          <Route path="/mock-tests/:year" element={<MockTestsHomePage />} />
-          <Route path="/mock-tests/exam/:testId" element={<MockTestExamScreen />} />
-          <Route path="/mock-tests/results/:attemptId" element={<MockTestResultScreen />} />
         </Routes>
       </main>
 
@@ -100,17 +80,17 @@ export default function App() {
               <span className="w-6 h-6 rounded-lg bg-[#1A5344] text-white flex items-center justify-center text-xs">
                 🌿
               </span>
-              <span>AyurvedSiddhi Classical, Subjectwise, Test Series, Tagwise, PYP & Daily Tests Portal</span>
+              <span>AyurvedSiddhi Classical, Subjectwise, Test Series, Tagwise & Previous Years Portal</span>
             </div>
             <div className="flex items-center gap-6 text-stone-500">
               <span>Port: 5167</span>
               <span>•</span>
-              <span>17 Samhitas • 38 Subjects • 7 Test Series • 6 Tags • 127 PYP Papers • 3 Daily Sessions</span>
+              <span>17 Samhitas • 38 Subjects • 7 Test Series • 6 Tags • 127 PYP Papers</span>
               <span>•</span>
-              <span>176,592+ Authenticated Live Questions</span>
+              <span>150,000+ Authenticated Live Questions</span>
             </div>
             <div className="text-stone-400">
-              Charaka • Sushruta • Vagbhata • AIAPGET • UPSC • State PSCs • New Pattern Tags • Daily Tests
+              Charaka • Sushruta • Vagbhata • AIAPGET • UPSC • State PSCs • New Pattern Tags
             </div>
           </div>
         </footer>

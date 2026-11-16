@@ -292,3 +292,4 @@ export const TagwiseResultScreen: React.FC = () => {
     </div>
   );
 };
+
