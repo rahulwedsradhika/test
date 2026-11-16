@@ -248,6 +248,16 @@ export const HomePage: React.FC = () => {
             </span>
           </Link>
           <Link
+            to="/mock-tests"
+            className="flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 text-stone-700 hover:bg-[#FAF9F5] border border-stone-200/60 hover:border-purple-400 bg-purple-50/40"
+          >
+            <i className="fa-solid fa-brain text-base text-purple-600"></i>
+            <span>Mock Tests</span>
+            <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-200/70 text-purple-900">
+              398 Tests
+            </span>
+          </Link>
+          <Link
             to="/test-series"
             className="flex-1 sm:flex-initial px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 text-stone-700 hover:bg-[#FAF9F5] border border-stone-200/60 hover:border-amber-400 bg-amber-50/40"
           >

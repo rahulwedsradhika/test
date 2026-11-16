@@ -495,3 +495,101 @@ export interface DailyReviewQuestion {
   status: 'correct' | 'incorrect' | 'unattempted';
 }
 
+// -------------------------------------------------------------
+// Phase 8: Mock Tests Interfaces
+// -------------------------------------------------------------
+export interface MockYear {
+  year_id: string;
+  display_year: number;
+  academic_session: string;
+  source_route_hint: string;
+  expected_listings: number;
+  display_order: number;
+  count_provenance: string;
+  verified_listings: number;
+  ready_tests: number;
+  restricted_tests: number;
+  count_delta: number;
+}
+
+export interface MockTestListing {
+  test_id: string;
+  source_namespace: string;
+  source_test_id: string;
+  exact_title: string;
+  exact_subtitle: string | null;
+  exam_date: string | null;
+  display_badge: string | null;
+  mcq_count: number;
+  max_marks: number;
+  duration_seconds: number;
+  marking_rules_json: string | null;
+  availability: 'available' | 'restricted' | 'unavailable';
+  validation_status: 'verified' | 'incomplete' | 'pending';
+  original_listing_order: number;
+  actual_question_count: number;
+  attempt?: {
+    attempt_id: string;
+    is_completed: boolean;
+    score: number;
+    max_marks: number;
+    accuracy_percent: number;
+    completed_at: string;
+  } | null;
+  is_solved: boolean;
+  is_in_progress: boolean;
+}
+
+export interface MockQuestionOption {
+  option_id: string;
+  display_position: number;
+  option_html: string;
+  is_correct?: boolean;
+}
+
+export interface MockExamQuestion {
+  question_id: string;
+  display_position: number;
+  stem_html: string;
+  question_type: string;
+  question_marks: number;
+  negative_marks: number;
+  options: MockQuestionOption[];
+}
+
+export interface MockAttemptSummary {
+  attempt_id: string;
+  test_id: string;
+  year_id: string;
+  started_at: string;
+  completed_at: string;
+  time_spent_seconds: number;
+  score: number;
+  max_marks: number;
+  accuracy_percent: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  total_questions: number;
+}
+
+export interface MockReviewQuestion {
+  question_id: string;
+  display_position: number;
+  stem_html: string;
+  question_type: string;
+  explanation_html: string | null;
+  student_choice: number;
+  correct_choice: number;
+  is_correct: boolean;
+  is_unattempted: boolean;
+  question_marks: number;
+  negative_marks: number;
+  options: {
+    option_id: string;
+    display_position: number;
+    option_html: string;
+    is_correct: boolean;
+  }[];
+}
+

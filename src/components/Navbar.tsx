@@ -46,6 +46,7 @@ export const Navbar: React.FC = () => {
     { to: '/tagwise', label: 'Tagwise', count: '6 Tags', icon: 'fa-tags' },
     { to: '/previous-years', label: 'Previous Years', count: '127', icon: 'fa-calendar-days' },
     { to: '/daily-tests', label: 'Daily Tests', count: '3 Sess', icon: 'fa-sun' },
+    { to: '/mock-tests', label: 'Mock Tests', count: '398', icon: 'fa-brain' },
     { to: '/coverage', label: 'Audit & Ledger', count: '', icon: 'fa-chart-pie' },
     { to: '/bookmarks', label: 'Bookmarks', count: '', icon: 'fa-bookmark' },
   ];
@@ -78,6 +79,7 @@ export const Navbar: React.FC = () => {
                 (link.to === '/tagwise' && location.pathname.startsWith('/tagwise')) ||
                 (link.to === '/previous-years' && location.pathname.startsWith('/previous-years')) ||
                 (link.to === '/daily-tests' && location.pathname.startsWith('/daily-tests')) ||
+                (link.to === '/mock-tests' && location.pathname.startsWith('/mock-tests')) ||
                 (link.to === '/test-series' && location.pathname.startsWith('/test-series'));
 
               return (

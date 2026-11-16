@@ -107,6 +107,16 @@ try {
 }
 const { handleDailyTestsRoutes } = require('./daily_tests_routes.cjs');
 
+const DB_PATH_MOCK = resolveDbPath('mock_tests_fresh.sqlite');
+let mockDb;
+try {
+  mockDb = new DatabaseSync(DB_PATH_MOCK);
+  console.log('[API Server] Connected to Phase 8 Mock Tests DB (4 Years, 398 Tests):', DB_PATH_MOCK);
+} catch (e) {
+  console.error('[API Server] Error opening Mock Tests DB:', e.message);
+}
+const { handleMockTestsRoutes } = require('./mock_tests_routes.cjs');
+
 if (sessionsDb) {
   try {
     sessionsDb.exec(`
@@ -180,6 +190,26 @@ CREATE TABLE IF NOT EXISTS tagwise_attempts (
         is_completed INTEGER NOT NULL DEFAULT 0
       );
       CREATE INDEX IF NOT EXISTS idx_daily_attempts_test ON daily_attempts(test_uid, is_completed);
+      CREATE TABLE IF NOT EXISTS mock_attempts (
+        attempt_id TEXT PRIMARY KEY,
+        test_id TEXT NOT NULL,
+        year_id TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        saved_at TEXT,
+        completed_at TEXT,
+        answers_json TEXT NOT NULL DEFAULT '{}',
+        marked_for_review_json TEXT NOT NULL DEFAULT '[]',
+        time_remaining_seconds INTEGER,
+        time_spent_seconds INTEGER DEFAULT 0,
+        score REAL DEFAULT 0,
+        max_marks REAL DEFAULT 0,
+        accuracy_percent REAL DEFAULT 0,
+        correct_count INTEGER DEFAULT 0,
+        incorrect_count INTEGER DEFAULT 0,
+        unattempted_count INTEGER DEFAULT 0,
+        is_completed INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_mock_attempts_test ON mock_attempts(test_id, is_completed);
     `);
   } catch (e) {
     console.error('[API Server] Error initializing testseries_attempts table:', e.message);
@@ -1796,6 +1826,11 @@ const server = http.createServer(async (req, res) => {
 
   // Phase 7: Daily Tests Routes
   if (await handleDailyTestsRoutes(req, res, pathname, req.method, params, dailyDb, sessionsDb, sendJSON, parseBody)) {
+    return;
+  }
+
+  // Phase 8: Mock Tests Routes
+  if (await handleMockTestsRoutes(req, res, pathname, req.method, params, mockDb, sessionsDb, sendJSON, parseBody)) {
     return;
   }
 

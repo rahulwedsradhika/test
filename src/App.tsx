@@ -26,6 +26,9 @@ import { PreviousYearsResultScreen } from './pages/PreviousYearsResultScreen';
 import { DailyTestsHomePage } from './pages/DailyTestsHomePage';
 import { DailyTestExamScreen } from './pages/DailyTestExamScreen';
 import { DailyTestResultScreen } from './pages/DailyTestResultScreen';
+import { MockTestsHomePage } from './pages/MockTestsHomePage';
+import { MockTestExamScreen } from './pages/MockTestExamScreen';
+import { MockTestResultScreen } from './pages/MockTestResultScreen';
 
 export default function App() {
   const location = useLocation();
@@ -34,6 +37,7 @@ export default function App() {
     location.pathname.startsWith('/test-series/exam/') ||
     location.pathname.startsWith('/tagwise/practice/') ||
     location.pathname.startsWith('/daily-tests/exam/') ||
+    location.pathname.startsWith('/mock-tests/exam/') ||
     (location.pathname.startsWith('/previous-years/tests/') && location.pathname.endsWith('/exam'));
 
   return (
@@ -79,6 +83,12 @@ export default function App() {
           <Route path="/daily-tests/sessions/:sessionId" element={<DailyTestsHomePage />} />
           <Route path="/daily-tests/exam/:testUid" element={<DailyTestExamScreen />} />
           <Route path="/daily-tests/results/:attemptId" element={<DailyTestResultScreen />} />
+
+          {/* Phase 8: Mock Tests Routes */}
+          <Route path="/mock-tests" element={<MockTestsHomePage />} />
+          <Route path="/mock-tests/:year" element={<MockTestsHomePage />} />
+          <Route path="/mock-tests/exam/:testId" element={<MockTestExamScreen />} />
+          <Route path="/mock-tests/results/:attemptId" element={<MockTestResultScreen />} />
         </Routes>
       </main>
 

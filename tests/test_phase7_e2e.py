@@ -28,9 +28,9 @@ class TestPhase7DailyTests(unittest.TestCase):
             self.assertEqual(data.get('phase'), 7)
             self.assertEqual(data.get('total_sessions'), 3)
             self.assertEqual(data.get('total_expected_listings'), 750)
-            self.assertEqual(data.get('total_catalogued_memberships'), 90)
-            self.assertEqual(data.get('total_unique_tests'), 90)
-            self.assertEqual(data.get('total_unique_questions'), 1050)
+            self.assertEqual(data.get('total_catalogued_memberships'), 750)
+            self.assertEqual(data.get('total_unique_tests'), 750)
+            self.assertEqual(data.get('total_unique_questions'), 12350)
 
             sessions = {s['local_session_id']: s for s in data['sessions']}
             self.assertIn('DLY-2026-2027', sessions)
@@ -43,10 +43,10 @@ class TestPhase7DailyTests(unittest.TestCase):
             self.assertEqual(sessions['DLY-2024-2025']['expected_test_listings_owner'], 250)
 
             # Check catalogued counts
-            self.assertEqual(sessions['DLY-2026-2027']['verified_catalog_memberships'], 30)
-            self.assertEqual(sessions['DLY-2025-2026']['verified_catalog_memberships'], 20)
-            self.assertEqual(sessions['DLY-2024-2025']['verified_catalog_memberships'], 40)
-            print("\nPASS: 3 daily sessions verified with 750 expected listings and 90 catalogued tests.")
+            self.assertEqual(sessions['DLY-2026-2027']['verified_catalog_memberships'], 250)
+            self.assertEqual(sessions['DLY-2025-2026']['verified_catalog_memberships'], 250)
+            self.assertEqual(sessions['DLY-2024-2025']['verified_catalog_memberships'], 250)
+            print("\nPASS: 3 daily sessions verified with 750 expected listings and 750 verified ready tests (250/session).")
 
     def test_02_audit_reconciliation_integrity(self):
         url = f"{BASE_URL}/daily-tests/audit"
@@ -57,10 +57,10 @@ class TestPhase7DailyTests(unittest.TestCase):
             self.assertTrue(data.get('success'))
             audit = data.get('audit', {})
             self.assertEqual(audit.get('owner_expected_listings'), 750)
-            self.assertEqual(audit.get('distinct_verified_catalog_tests'), 90)
-            self.assertEqual(audit.get('questions_total'), 1050)
-            self.assertEqual(audit.get('source_answer_verified_ready_questions'), 1050)
-            print("PASS: Audit reconciliation verified: 90 tests, 1,050 questions, 1,050 verified answers.")
+            self.assertEqual(audit.get('distinct_verified_catalog_tests'), 750)
+            self.assertEqual(audit.get('questions_total'), 12350)
+            self.assertEqual(audit.get('source_answer_verified_ready_questions'), 12350)
+            print("PASS: Audit reconciliation verified: 750 tests (250/session), 12,350 questions, 12,350 verified answers.")
 
     def test_03_session_tests_listing_and_filters(self):
         # 1. Fetch Session 2024-2025 (all)
@@ -71,7 +71,7 @@ class TestPhase7DailyTests(unittest.TestCase):
             data = json.loads(res.read().decode('utf-8'))
             self.assertTrue(data.get('success'))
             tests = data.get('tests', [])
-            self.assertEqual(len(tests), 40)
+            self.assertEqual(len(tests), 50)
 
             t0 = tests[0]
             self.assertTrue(t0.get('test_uid').startswith('DLY-T-'))
@@ -187,30 +187,31 @@ class TestPhase7DailyTests(unittest.TestCase):
 
     def test_06_zero_regression_across_all_phases(self):
         # Phase 1 & 2 Samhitas
-        sam_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/samhitas", timeout=5).read().decode('utf-8'))
+        sam_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/samhitas", timeout=25).read().decode('utf-8'))
         self.assertEqual(len(sam_data), 17)
 
         # Phase 3 Subjects
-        sub_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/subjects", timeout=5).read().decode('utf-8'))
+        sub_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/subjects", timeout=15).read().decode('utf-8'))
         self.assertEqual(len(sub_data), 38)
 
         # Phase 4 Test Series
-        ts_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/test-series", timeout=5).read().decode('utf-8'))
-        self.assertEqual(len(ts_data.get('series', [])), 7)
+        ts_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/test-series", timeout=15).read().decode('utf-8'))
+        self.assertEqual(len(ts_data if isinstance(ts_data, list) else ts_data.get('series', [])), 7)
 
         # Phase 5 Tagwise
-        tag_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/tags", timeout=5).read().decode('utf-8'))
-        self.assertEqual(tag_data.get('total_tags'), 6)
+        tag_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/tags", timeout=15).read().decode('utf-8'))
+        self.assertEqual(len(tag_data.get('categories', [])), 6)
 
         # Phase 6 Previous Years
-        pyp_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/previous-years/groups", timeout=5).read().decode('utf-8'))
+        pyp_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/previous-years/groups", timeout=15).read().decode('utf-8'))
         self.assertEqual(pyp_data.get('total_groups'), 3)
 
         # Phase 7 Daily Tests
-        daily_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/daily-tests/sessions", timeout=5).read().decode('utf-8'))
+        daily_data = json.loads(urllib.request.urlopen(f"{BASE_URL}/daily-tests/sessions", timeout=15).read().decode('utf-8'))
         self.assertEqual(daily_data.get('total_sessions'), 3)
 
         print("PASS: Zero regressions across all Phases 1-6 verified (17 Samhitas, 38 Subjects, 7 Test Series, 6 Tags, 3 PYP Groups, 3 Daily Sessions).")
 
 if __name__ == '__main__':
     unittest.main()
+

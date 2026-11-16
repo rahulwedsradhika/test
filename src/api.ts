@@ -600,3 +600,156 @@ export async function fetchDailyAudit(): Promise<any> {
   return res.json();
 }
 
+// -------------------------------------------------------------
+// Phase 8: Mock Tests API Helpers
+// -------------------------------------------------------------
+export async function getMockYears(): Promise<{
+  success: boolean;
+  phase: number;
+  title: string;
+  total_years: number;
+  total_expected_listings: number;
+  total_verified_listings: number;
+  total_ready_tests: number;
+  total_unique_tests: number;
+  total_unique_questions: number;
+  years: any[];
+}> {
+  const res = await fetch(`${BASE_URL}/mock-tests/years`);
+  if (!res.ok) throw new Error('Failed to fetch mock test years');
+  return res.json();
+}
+
+export async function getMockTests(
+  yearId: string | number,
+  options?: { filter?: string; search?: string; limit?: number; offset?: number }
+): Promise<{
+  success: boolean;
+  year: any;
+  total: number;
+  limit: number;
+  offset: number;
+  tests: any[];
+}> {
+  const params = new URLSearchParams();
+  if (options?.filter) params.append('filter', options.filter);
+  if (options?.search) params.append('search', options.search);
+  if (options?.limit) params.append('limit', String(options.limit));
+  if (options?.offset) params.append('offset', String(options.offset));
+
+  const qs = params.toString() ? `?${params.toString()}` : '';
+  const res = await fetch(`${BASE_URL}/mock-tests/years/${encodeURIComponent(yearId)}/tests${qs}`);
+  if (!res.ok) throw new Error(`Failed to fetch mock tests for year ${yearId}`);
+  return res.json();
+}
+
+export async function getMockTestDetail(testId: string): Promise<{
+  success: boolean;
+  test: any;
+}> {
+  const res = await fetch(`${BASE_URL}/mock-tests/tests/${encodeURIComponent(testId)}`);
+  if (!res.ok) throw new Error(`Failed to fetch mock test ${testId}`);
+  return res.json();
+}
+
+export async function getMockTestQuestions(testId: string): Promise<{
+  success: boolean;
+  test_id: string;
+  exact_title: string;
+  exact_subtitle: string;
+  mcq_count: number;
+  max_marks: number;
+  duration_seconds: number;
+  marking_rules: any;
+  questions: any[];
+}> {
+  const res = await fetch(`${BASE_URL}/mock-tests/tests/${encodeURIComponent(testId)}/questions`);
+  if (!res.ok) throw new Error(`Failed to fetch questions for mock test ${testId}`);
+  return res.json();
+}
+
+export async function startMockAttempt(data: {
+  test_id: string;
+  year_id?: string;
+}): Promise<{
+  success: boolean;
+  resumed: boolean;
+  attempt_id: string;
+  test_id: string;
+  year_id: string;
+  answers: Record<string, number>;
+  marked_for_review: string[];
+  time_remaining_seconds: number;
+  started_at: string;
+}> {
+  const res = await fetch(`${BASE_URL}/mock-tests/attempts/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to start mock test attempt');
+  return res.json();
+}
+
+export async function saveMockAttempt(
+  attemptId: string,
+  data: {
+    answers?: Record<string, number>;
+    marked_for_review?: string[];
+    time_remaining_seconds?: number;
+    time_spent_seconds?: number;
+  }
+): Promise<{ success: boolean; saved_at: string }> {
+  const res = await fetch(`${BASE_URL}/mock-tests/attempts/${encodeURIComponent(attemptId)}/save`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to autosave mock test progress');
+  return res.json();
+}
+
+export async function submitMockAttempt(
+  attemptId: string,
+  data: {
+    answers: Record<string, number>;
+    time_spent_seconds?: number;
+  }
+): Promise<{
+  success: boolean;
+  attempt_id: string;
+  score: number;
+  max_marks: number;
+  accuracy_percent: number;
+  correct_count: number;
+  incorrect_count: number;
+  unattempted_count: number;
+  total_questions: number;
+  completed_at: string;
+}> {
+  const res = await fetch(`${BASE_URL}/mock-tests/attempts/${encodeURIComponent(attemptId)}/submit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Failed to submit mock test');
+  return res.json();
+}
+
+export async function fetchMockAttemptResults(attemptId: string): Promise<{
+  success: boolean;
+  attempt: any;
+  test: any;
+  questions: any[];
+}> {
+  const res = await fetch(`${BASE_URL}/mock-tests/attempts/${encodeURIComponent(attemptId)}/results`);
+  if (!res.ok) throw new Error('Failed to fetch mock test results');
+  return res.json();
+}
+
+export async function fetchMockAudit(): Promise<any> {
+  const res = await fetch(`${BASE_URL}/mock-tests/audit`);
+  if (!res.ok) throw new Error('Failed to fetch mock test audit');
+  return res.json();
+}
+
